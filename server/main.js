@@ -10,7 +10,6 @@ app.use(bodyParser());
 //app.keys = ['secret'];
 //app.use(session(config.session,app));
 app.use(router.routes());
-app.use(router.allowedMethods())  //路由结束自动添加状态等
-
+app.use(router.allowedMethods()) ; //路由结束自动添加状态等
 app.listen(3000);
 console.log("listen 3000")

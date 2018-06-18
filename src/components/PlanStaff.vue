@@ -98,13 +98,28 @@
       noticeModal,
     },
     created(){
-      this.getPlanStaff();
+      console.log("ps created")
+      this.getPlanStaff(this.course.id);
     },
 
     props:['course'],
     watch:{
-      course: this.getPlanStaff,
-  },
+      course: {
+        handler: function (val) {
+          console.log("test")
+          axios({
+            method: "get",
+            url: `/api/plan`,
+            params:{'id':this.course.id}
+          }).then(result => {
+            console.log(result.data);
+            this.planStaff = result.data;
+            this.dividePlan()
+          })
+        },
+        deep: true
+        }
+      },
     data(){
       return{
         planStaff:[],
@@ -138,11 +153,11 @@
           this.$set(this.pageContent,i,this.planStaff.slice(i*pageLen,(i+1)*pageLen))
         }
       },
-      getPlanStaff() {
+      getPlanStaff(val,oldVal) {
         axios({
           method: "get",
-          url: `/api/plan/${this.course.id}`,
-          //params:{'id':this.course.id}
+          url: `/api/plan`,
+          params:{'id':this.course.id}
         }).then(result => {
           console.log(result.data);
           this.planStaff = result.data;

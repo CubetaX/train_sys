@@ -3,11 +3,12 @@ const query = require('../sql/mysql')
 const plan = {
   async getPlan(ctx) {
     console.log("get all planSTaff")
-    console.log("test",ctx.params);
+    console.log("query",ctx.url);
     const sql = `select * from planstaff where course_id=${ctx.params.id} `;
     try {
       let result = await query(sql);
       ctx.response.body = result
+      console.log(result);
     }catch(e){
       console.error(e)
     }
