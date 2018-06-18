@@ -44,7 +44,7 @@
             <span v-else>已结束</span>
             {{item.course_state_code}}</td>
 
-          <td><span>查看</span></td>
+          <td><span @click="look(item)">查看</span></td>
           <td><span @click="edit(item)">修改</span>
             <span @click="delete_(item)">删除</span>
           </td>
@@ -83,7 +83,7 @@
           确定删除课程id号：{{tempCourse.id}} 课程名：{{tempCourse.name}}？
         </template>
       </notice-modal>
-      <!--<PlanStaff :></PlanStaff>-->
+      <PlanStaff :course="tempCourse" v-if="isLooking"></PlanStaff>
     </div>
 </template>
 
@@ -91,13 +91,13 @@
   import formModal from './formModal'
   import noticeModal from './noticeModal'
   import axios from 'axios'
-  //import PlanStaff from './PlanStaff'
+  import PlanStaff from './PlanStaff'
     export default {
         name: "PlanList",
       components:{
           formModal,
         noticeModal,
-   //     PlanStaff
+        PlanStaff
       },
         created(){
           this.getCourse();
@@ -107,6 +107,7 @@
           return{
             searchKey:'',
             isEditing:false,
+            isLooking:false,
             pageContent:[],
             pageNum:0,
             test:false,
@@ -126,6 +127,8 @@
               selectedNum:0,
             },
             oldId:null,
+            courseName:'',
+
 
           }
       },
@@ -143,13 +146,7 @@
             let pageLen = 3;//每页显示的长度
             for (let i=0; i<this.courses.length/pageLen ;i++){
               this.$set(this.pageContent,i,this.courses.slice(i*pageLen,(i+1)*pageLen))
-              // this.pageContent[i] = this.staff.slice(i*pageLen,(i+1)*pageLen)
             }
-            // for (let i=0; i<this.pageContent.length;i++){
-            //   console.log("分组内容",this.pageContent[i]);
-            // }
-            // console.log("!!",this.pageContent[this.pageNum])
-            //this.$forceUpdate();
           },
           getCourse() {
             axios({
@@ -161,7 +158,6 @@
               this.divideCourse()
             })
           },
-
           updateCourse(course,oldId){
             console.log("update start")
             axios({
@@ -224,6 +220,10 @@
             this.tempCourse = Course;
             this.oldId = Course.id;
           },
+          look(Course){
+            this.tempCourse = Course;
+            this.isLooking = true;
+          },
           closeModal(){
             this.isEditing = false;
             this.showFormModal = false;
@@ -244,6 +244,7 @@
             };
             this.showFormModal = true
           },
+
         }
     }
 </script>

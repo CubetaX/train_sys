@@ -4,7 +4,6 @@ const course = {
   async getAllCourse(ctx) {
     console.log("get all course")
     const sql = "select * from course";
-    //const sql_2 = `select id,count() from training_plan Group by course_id`
     let result = await query(sql);
     ctx.response.body = result
   },
