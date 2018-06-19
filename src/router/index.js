@@ -6,6 +6,7 @@ import AllStaff from '../components/AllStaff'
 import PlanList from '../components/PlanList'
 import PlanStaff from '../components/PlanStaff'
 import Welcome from '../components/Welcome'
+import UserInfo from '../components/UserInfo'
 Vue.use(Router)
 export default new Router({
  // mode: 'history',
@@ -33,6 +34,11 @@ export default new Router({
         {
           path: '/admin/allStaff',
           component: AllStaff
+        },
+        {
+          path: '/admin/userInfo/:id',
+          component: UserInfo,
+          props: true
         },
         {
           path: '/admin/planList',

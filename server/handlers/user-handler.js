@@ -37,15 +37,16 @@ const user = {   //路由操作
   },
   async logout(ctx){
   },
-  async getOneStaff(ctx){
+  async getUserInfo(ctx){
+    console.log("get user info loading")
     const sql = `select * from person where id=${ctx.params.id}`;
     try {
       let result = await query(sql);
-      console.log("get one staff ok")
+      console.log("get  user info  ok")
       ctx.response.body = result;
     }catch (e) {
       console.error(e)
-      console.log("get one staff wrong")
+      console.log("get user info  wrong")
     }
   },
 };

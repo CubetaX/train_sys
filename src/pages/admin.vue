@@ -5,14 +5,14 @@
   </div>
   <div class="side-bar">
     <div class="user">
-      <h1>欢迎{{id}}</h1>
+      <h1>欢迎{{userName}}</h1>
       <a href="#/login">登出</a>
     </div>
     <div class="nav">
       <ul>
-        <router-link :to="`/admin/allStaff`" > <li :class="selected==1?'selected':''" @click="select(1)">所有员工列表</li></router-link>
+        <router-link to="/admin/allStaff" > <li :class="selected==1?'selected':''" @click="select(1)">所有员工列表</li></router-link>
         <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)">培训计划列表</li></router-link>
-        <router-link to="`/admin/userInfo`" ><li :class="selected==3?'selected':''" @click="select(3)">修改个人资料</li></router-link>
+        <router-link :to="`/admin/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)">修改个人资料</li></router-link>
       </ul>
     </div>
   </div>
@@ -22,39 +22,22 @@
 </template>
 
 <script>
-  import AllStaff from '../components/AllStaff'
-  import PlanList from '../components/PlanList'
-  import axios from 'axios'
 
   export default {
-    created(){//this.id = this.$route.params.id;
-      this.getUserInfo(id);
-      this.$router.push('admin/welcome')
+    created(){
+      this.$router.push('/admin/welcome')  //'/根目录开始 如果没有则从当前开始'
     },
     data(){
       return{
         view:'',
         selected:null,
-        id:this.$route.params.id,
-        userInfo:{},
+        userId:this.$route.params.id,
+        userName: this.$route.params.name,
       }
     }
     ,
       name: "admin",
-      components:{
-        AllStaff,
-        PlanList
-      },
       methods:{
-      getUserInfo(id){
-        axios({
-          method: 'get',
-          url: `api/user/${id}`
-        }).then(result => {
-          console.log(result.data);
-          this.userInfo = result.data;
-        })
-      },
       select(num){
         this.selected = num;
       },
