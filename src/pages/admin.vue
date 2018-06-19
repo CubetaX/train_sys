@@ -1,9 +1,7 @@
 <template>
 <div class="container">
   <div class="content">
-    <hr>
-    <router-view></router-view>
-    <hr>
+    <router-view> </router-view>
   </div>
   <div class="side-bar">
     <div class="user">
@@ -12,8 +10,9 @@
     </div>
     <div class="nav">
       <ul>
-        <li><router-link :to="`/admin/${id}/allStaff`"><span>所有员工列表</span></router-link> </li>
-        <li><router-link to="/admin/1/planList"><span>培训计划列表</span></router-link> </li>
+        <router-link :to="`/admin/allStaff`" > <li :class="selected==1?'selected':''" @click="select(1)">所有员工列表</li></router-link>
+        <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)">培训计划列表</li></router-link>
+        <router-link to="`/admin/userInfo`" ><li :class="selected==3?'selected':''" @click="select(3)">修改个人资料</li></router-link>
       </ul>
     </div>
   </div>
@@ -25,18 +24,40 @@
 <script>
   import AllStaff from '../components/AllStaff'
   import PlanList from '../components/PlanList'
-    export default {
+  import axios from 'axios'
+
+  export default {
+    created(){//this.id = this.$route.params.id;
+      this.getUserInfo(id);
+      this.$router.push('admin/welcome')
+    },
     data(){
       return{
-        view:''
+        view:'',
+        selected:null,
+        id:this.$route.params.id,
+        userInfo:{},
       }
     }
     ,
       name: "admin",
-      props:['id'],
       components:{
         AllStaff,
         PlanList
+      },
+      methods:{
+      getUserInfo(id){
+        axios({
+          method: 'get',
+          url: `api/user/${id}`
+        }).then(result => {
+          console.log(result.data);
+          this.userInfo = result.data;
+        })
+      },
+      select(num){
+        this.selected = num;
+      },
       }
     }
 </script>
@@ -48,7 +69,6 @@
     margin:0;
     padding: 0;
     .side-bar {
-      //padding-left: 20px;
       height: 1000px;
       width: 17%;
       background: #5BC0DE;
@@ -60,7 +80,8 @@
         margin-top: 50px ;
       }
       li{
-
+        font-size: 15px;
+        color: white;
         line-height: 50px;//让文字居中
         vertical-align: center;
         text-align: center;
@@ -69,18 +90,14 @@
         background: #337AB7;
         height: 50px;
         width: 100%;
-        span{
-          color: white;
-        }
       }
 
       li:hover{
         background-color: #0e24b7;
       }
-      li:focus{
+      .selected{
         background-color: #0e24b7;
       }
-
     }
   }
 
@@ -89,11 +106,7 @@
     width: 81%;
     //margin-left: 50px;
   }
-hr{
-  background: gray;
-  height: 2px;
-  border: none;
-}
+
   .user h1{
     display: inline-block;
     margin-right: 50px;

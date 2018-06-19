@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div v-if="course.selectedNum!=0">
     <h2>
-      <span class="label label-primary">{{course.name}}</span>
-      <span class="label label-info">共有{{course.length}}名员工</span>
+      <span class="label label-success">{{course.name}}</span>
+      <span class="label label-info">共有{{course.selectedNum}}名员工</span>
       <span class="search"><input @keyup.enter="searchPlan(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
     </h2>
     <table class="table table-striped">
@@ -26,22 +26,31 @@
         <td>女</td>
         <td>设计部</td>
         <td>设计师</td>
-        <td>18-05-12</td>
-        <td>99</td>
-        <td>优秀</td>
+        <td><input type="date"></td>
+        <td><input type="text" value="99"></td>
+        <td>
+          <select  class="selectMenu">
+            <option value="0">未考核</option>
+            <option value="1">不及格</option>
+            <option value="2">及格</option>
+            <option value="3">良好</option>
+            <option value="4">优秀</option>
+          </select>
+        </td>
         <td>删除</td>
       </tr>
-      <tr v-for="item in pageContent[pageNum]">
+      <tr v-for="item in pageContent[pageNum]" @click="select(item.id)" :class="item.id===selectId?'selected':''">
         <td>{{item.id}}</td>
         <td>{{item.name}}</td>
         <td>{{item.sex}}</td>
         <td>{{item.department_id}}</td>
         <td>{{item.job}}</td>
+
         <td>
           <span v-if="!item.exam_date">添加</span>
           <span v-else>{{item.exam_date}}</span>
         </td>
-
+        <td><input type="text" v-model="item.score"></td>
         <td>
           <span v-if="!item.apprisement_code">添加</span>
           <span v-else>{{item.apprisement_name}}</span>
@@ -84,6 +93,12 @@
       </template>
     </notice-modal>
     <!--<PlanStaff :></PlanStaff>-->
+    <hr>
+  </div>
+  <div v-else>
+   <h2>
+     <span class="label label-warning">该课程暂无学员</span>
+   </h2>
   </div>
 </template>
 
@@ -106,11 +121,10 @@
     watch:{
       course: {
         handler: function (val) {
-          console.log("test")
+          console.log("test",val)
           axios({
             method: "get",
-            url: `/api/plan`,
-            params:{'id':this.course.id}
+            url: `/api/plan/${this.course.id}`,
           }).then(result => {
             console.log(result.data);
             this.planStaff = result.data;
@@ -134,10 +148,13 @@
 
         },
         oldId:null,
-
+        selectId:'',
       }
     },
     methods: {
+      select(selectId){
+        this.selectId = selectId;
+      },
       nextPage(){
         this.pageNum++;
         //this.$forceUpdate()
@@ -156,8 +173,8 @@
       getPlanStaff(val,oldVal) {
         axios({
           method: "get",
-          url: `/api/plan`,
-          params:{'id':this.course.id}
+          url: `/api/plan/${this.course.id}`,
+         // params:{'id':this.course.id}
         }).then(result => {
           console.log(result.data);
           this.planStaff = result.data;
@@ -188,7 +205,7 @@
       postPlan(){
         axios({
           method:'post',
-          url:'api/course',
+          url:'api/plan',
           data:{course:this.tempPlan}
         }).then(response => {
           console.log(response.data)
@@ -205,7 +222,7 @@
       deletePlan(course){
         axios({
           method: 'delete',
-          url: 'api/course',
+          url: 'api/plan',
           data:{id:course.id}
         }).then( result => {
             if(result.data === - 1){
@@ -242,6 +259,13 @@
 </script>
 
 <style scoped>
+  .selectMenu{
+    color: deepskyblue;
+    border: 0;
+  }
+  .selected{
+    border:3px solid deepskyblue !important;
+  }
   .search{
     display: inline-block;
     float: right;
@@ -251,12 +275,20 @@
     float: right;
   }
   thead{
-    background:#CCFFFF;
+    background-color:#CCFFFF ;
   }
   tbody span{
     color: deepskyblue;
   }
   tbody span:hover{
     cursor: pointer;
+  }
+  input{
+    border: 0;
+  }
+  hr{
+    background: gray;
+    height: 2px;
+    border: none;
   }
 </style>

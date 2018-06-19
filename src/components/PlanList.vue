@@ -31,7 +31,7 @@
           <td>2018-5-18</td>
           <td>修改</td>
         </tr>
-        <tr v-for="item in pageContent[pageNum]">
+        <tr v-for="item in pageContent[pageNum] "@dblclick="select(item.id);look(item)" :class="item.id===selectId?'selected':''">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
           <td>{{item.classtime}}</td>
@@ -39,10 +39,13 @@
           <td>{{item.teacher_id}}</td>
           <td>{{item.selectedNum}}/{{item.number}}</td>
 
-          <td><span v-if="item.course_state_code===1">选课中</span>
-            <span v-else-if="item.course_state_code===2">进行中</span>
-            <span v-else>已结束</span>
-            {{item.course_state_code}}</td>
+          <td>
+            <select v-model="item.course_state_code" class="selectMenu">
+            <option value="0">选课中</option>
+            <option value="1">进行中</option>
+            <option value="2">已结束</option>
+            </select>
+          </td>
 
           <td><span @click="look(item)">查看</span></td>
           <td><span @click="edit(item)">修改</span>
@@ -66,16 +69,24 @@
           填写课程信息
         </template>
         <template slot="body">
-          <span class="notNull">*</span>
-          ID：<input type="text" class="form-control" placeholder="ID" v-model="tempCourse.id">
-          课程名：<input type="text" class="form-control" placeholder="课程名" v-model="tempCourse.name">
-          授课老师：<input type="text" class="form-control" placeholder="授课老师" v-model="tempCourse.teacher_id">
-          介绍：<input type="text" class="form-control" placeholder="介绍" v-model="tempCourse.intro">
-          教材：<input type="text" class="form-control" placeholder="教材" v-model="tempCourse.book">
-          上课教室：<input type="text" class="form-control" placeholder="上课人数" v-model="tempCourse.classroom">
-          上课人数：<input type="text" class="form-control" placeholder="上课人数" v-model="tempCourse.number">
-          上课时间：<input type="text" class="form-control" placeholder="上课时间" v-model="tempCourse.classtime">
-          课程状态<input type="text" class="form-control" placeholder="课程状态" v-model="tempCourse.course_state_code">
+          <span>id:<input type="text" class="form-control" placeholder="ID" v-model="tempCourse.id"></span>
+          <span>课程名：<input type="text" class="form-control" placeholder="姓名" v-model="tempCourse.name"></span>
+          <span>老师：<input type="text" class="form-control" placeholder="老师" v-model="tempCourse.teacher_id"></span>
+          <span>简介：<input type="text" class="form-control" placeholder="简介" v-model="tempCourse.intro"></span>
+          <span>教材：<input type="text" class="form-control" placeholder="教材" v-model="tempCourse.book"></span>
+          <span>教室：<input type="text" class="form-control" placeholder="教室" v-model="tempCourse.classroom"></span>
+          <span>人数：<input type="text" class="form-control" placeholder="人数" v-model="tempCourse.number"></span>
+          <span>上课时间：<input type="date" class="form-control" v-model="tempCourse.classtime"></span>
+          <span>
+         状态：
+          <button class="btn btn-default">
+          <select v-model="tempCourse.course_state_code" class="selectMenu">
+            <option value="0">选课中</option>
+            <option value="1">进行中</option>
+            <option value="2">已结束</option>
+          </select>
+        </button>
+       </span>
         </template>
       </form-modal>
       <notice-modal @deleteCourse="deleteCourse" @closeModal="closeModal" v-show="showNoticeModal">
@@ -83,7 +94,8 @@
           确定删除课程id号：{{tempCourse.id}} 课程名：{{tempCourse.name}}？
         </template>
       </notice-modal>
-      <PlanStaff :course="tempCourse" v-if="isLooking"></PlanStaff>
+      <hr>
+      <PlanStaff :course="tempCourse" v-if="isLooking" ></PlanStaff>
     </div>
 </template>
 
@@ -128,11 +140,15 @@
             },
             oldId:null,
             courseName:'',
+            selectId:'',
 
 
           }
       },
         methods: {
+          select(selectId){
+            this.selectId = selectId;
+          },
           nextPage(){
             this.pageNum++;
             //this.$forceUpdate()
@@ -143,7 +159,7 @@
           },
           divideCourse(){
             this.pageContent = [];
-            let pageLen = 3;//每页显示的长度
+            let pageLen = 5;//每页显示的长度
             for (let i=0; i<this.courses.length/pageLen ;i++){
               this.$set(this.pageContent,i,this.courses.slice(i*pageLen,(i+1)*pageLen))
             }
@@ -250,6 +266,9 @@
 </script>
 
 <style scoped>
+  .selected{
+    background: #CCFFFF !important;
+  }
   .search{
     display: inline-block;
     float: right;
@@ -266,5 +285,10 @@
   }
   tbody span:hover{
     cursor: pointer;
+  }
+  hr{
+    background: gray;
+    height: 2px;
+    border: none;
   }
 </style>

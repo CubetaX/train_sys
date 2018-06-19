@@ -20,26 +20,30 @@
     </tr>
     </thead>
   <tbody >
-  <tr>
-    <td>1</td>
-    <td>小明</td>
-    <td>男</td>
-    <td>计算机</td>
-    <td>开发工程师</td>
-    <td>
-      <span>修改</span>
-      <span>删除</span>
-    </td>
-  </tr>
-  <tr>
-
-  </tr>
+  <!--<tr>-->
+    <!--<td>1</td>-->
+    <!--<td>小明</td>-->
+    <!--<td>男</td>-->
+    <!--<td>计算机</td>-->
+    <!--<td>开发工程师</td>-->
+    <!--<td>17685379583</td>-->
+    <!--<td>管理員</td>-->
+    <!--<td>-->
+      <!--<span>修改</span>-->
+      <!--<span>删除</span>-->
+    <!--</td>-->
+  <!--</tr>-->
   <tr v-for="item in pageContent[pageNum]">
     <td>{{item.id}}</td>
     <td>{{item.name}}</td>
     <td>{{item.sex}}</td>
-    <td>{{item.departement_id}}</td>
+    <td>{{item.department_id}}</td>
+    <!--<td v-if="item.department_id==null"></td>-->
+    <!--<td v-else v-for="dep in deps" v-if="item.department_id==dep.id">{{dep.name}}</td>-->
     <td>{{item.job}}</td>
+    <td>{{item.tel}}</td>
+    <td v-if="item.authority===1">管理员</td>
+    <td v-else>普通员工</td>
     <td>
       <span @click="edit(item)">修改</span>
       <span @click="delete_(item)">删除</span>
@@ -63,15 +67,17 @@
       填写员工信息
     </template>
     <template slot="body">
-      <span>ID：<input type="text" class="form-control" placeholder="ID" v-model="tempStaff.id"></span>
-      <span>姓名：<input type="text" class="form-control" placeholder="姓名" v-model="tempStaff.name">
-</span>
-      <span>性别：<input type="text" class="form-control" placeholder="性别" v-model="tempStaff.sex">
-</span>
-      <span>密码：<input type="text" class="form-control" placeholder="密码" v-model="tempStaff.password">
-</span>
-      <span>生日：<input type="text" class="form-control" placeholder="生日" v-model="tempStaff.birthday">
-</span>
+      <span>id:<input type="text" class="form-control" placeholder="ID" v-model="tempStaff.id"></span>
+      <span>姓名：<input type="text" class="form-control" placeholder="姓名" v-model="tempStaff.name"></span>
+      <span>性别
+          <button class="btn btn-default">
+          <select v-model="tempStaff.sex" class="selectMenu">
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </button></span>
+      <span>密码：<input type="text" class="form-control" placeholder="密码" v-model="tempStaff.password"></span>
+      <span>生日：<input type="text" class="form-control" placeholder="生日" v-model="tempStaff.birthday"></span>
       <span>教育经历：<input type="text" class="form-control" placeholder="教育经历" v-model="tempStaff.edu"></span>
       <span>技能：<input type="text" class="form-control" placeholder="技能" v-model="tempStaff.speciaty"></span>
       <span>地址：<input type="text" class="form-control" placeholder="地址" v-model="tempStaff.address"></span>
@@ -86,8 +92,8 @@
           权限：
           <button class="btn btn-default">
           <select v-model="tempStaff.authority" class="selectMenu">
-            <option value="1">管理权限</option>
-            <option value="2">普通权限</option>
+            <option value="0">普通员工</option>
+            <option value="1">管理员</option>
           </select>
         </button>
         </span>
@@ -96,8 +102,8 @@
          状态：
           <button class="btn btn-default">
           <select v-model="tempStaff.state" class="selectMenu">
-            <option value="1">正式员工</option>
-            <option value="2">非正式员工</option>
+            <option value="0">正式员工</option>
+            <option value="1">非正式员工</option>
           </select>
         </button>
        </span>
@@ -105,8 +111,8 @@
          部门：
          <button class="btn btn-default">
           <select v-model="tempStaff.department_id" class="selectMenu">
-            <option value="1">设计部</option>
-            <option value="2">开发部</option>
+            <option  v-for="dep in deps" :value="dep.id">{{dep.name}}</option>
+            <option value="null">未分配</option>
           </select>
         </button>
        </span>
@@ -119,6 +125,7 @@
       确定删除员工id号：{{tempStaff.id}} 姓名：{{tempStaff.name}}？
     </template>
   </notice-modal>
+  <hr>
 </div>
 </template>
 
@@ -155,7 +162,8 @@
           pageContent:[],
           pageNum: 0,
           isEditing: false,
-          searchKey:''
+          searchKey:'',
+          deps:[],
         }
       },
       components:{
@@ -167,6 +175,8 @@
       created(){
         console.log("created~")
         this.getStaff(); //先执行下面
+        this.getDep();
+        console.log(this.dep)
       },
       methods:{
         nextPage(){
@@ -179,7 +189,7 @@
         },
         divideStaff(){
           this.pageContent = [];
-          let pageLen = 3;//每页显示的长度
+          let pageLen = 5;//每页显示的长度
           for (let i=0; i<this.staff.length/pageLen ;i++){
             this.$set(this.pageContent,i,this.staff.slice(i*pageLen,(i+1)*pageLen))
            // this.pageContent[i] = this.staff.slice(i*pageLen,(i+1)*pageLen)
@@ -189,6 +199,15 @@
           // }
           // console.log("!!",this.pageContent[this.pageNum])
           //this.$forceUpdate();
+        },
+        getDep(){
+          axios({
+            method: 'get',
+            url:'/api/dep'
+          }).then(result => {
+            console.log(result.data);
+            this.deps = result.data;
+          })
         },
         getStaff(){ //获取所有员工列表
           axios({
@@ -209,7 +228,6 @@
           }).then(response => {
             console.log(response.data)
             if ( response.data === -1)  {
-              //this.showFormModal = true;
               alert("插入失败")
             }
             else{
@@ -334,8 +352,13 @@
   .notNulll{
     color: red;
   }
- .pageControl{
+ .pageControl {
    float: right;
  }
+  hr{
+    background: gray;
+    height: 2px;
+    border: none;
+  }
 
 </style>

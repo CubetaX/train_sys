@@ -7,13 +7,13 @@ const staff = {
     try {
       let result = await query(sql);
       console.log("get all staff ok")
-      ctx.response.body = result
+      ctx.response.body = result;
     }catch (e) {
       console.error(e)
       console.log("get all staff wrong")
     }
-
   },
+
   async deleteStaff(ctx) {
     console.log(ctx.request.body);
     console.log("deleteStaff");
@@ -23,7 +23,7 @@ const staff = {
   },
   async postStaff(ctx) {
     let staff = ctx.request.body.staff;
-    //console.log(ctx.request.body)
+    console.log(ctx.request.body)
     const sql = `insert into person (id, password, authority, name, sex, birthday, job, edu, speciaty, address, tel, email, state, remark, department_id)
      values("${staff.id}", "${staff.password}", ${staff.authority}, "${staff.name}", "${staff.sex}", "${staff.birthday}", "${staff.job}", "${staff.edu}", "${staff.speciaty}", "${staff.address}", "${staff.tel}", "${staff.email}", ${staff.state}, "${staff.remark}", ${staff.department_id})`
      try {

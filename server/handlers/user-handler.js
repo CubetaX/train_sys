@@ -1,24 +1,26 @@
-const db = require('../sql/db-handler.js');
 
+const query = require('../sql/mysql')
 const user = {   //路由操作
 
   async login(ctx) {
     console.log('login~~')
+    sql = `select id,password,authority,name from person where id="${ctx.request.body.username}"`;
     try {
-      let user = await db.getUser(ctx.request.body.username);
-
-    //console.log(user);  //[ RowDataPacket { name: 'hqb', password: '123', count: 123 } ]
+      let user = await query(sql);
+    console.log(user);  //[ RowDataPacket { name: 'hqb', password: '123', count: 123 } ]
     user = user[0];
     if (!user) {//账号不存在
       ctx.response.body = -1
     }
     else if (user.password !== ctx.request.body.password) {//密码错误
       ctx.response.body = 0
-    } else {
-      console.log("login ok!")
-      ctx.response.body = 1; //ok
-      //ctx.session.id = user.id;
-    }}catch (e) {
+    }
+    else{ //管理员
+
+      ctx.response.body = user; //ok
+       console.log("login ok!")
+    }
+    }catch (e) {
       console.error(e);
     }
   },
@@ -34,7 +36,17 @@ const user = {   //路由操作
     //ctx.redirect('/') 会导致注册失败 即返回值
   },
   async logout(ctx){
-
-  }
+  },
+  async getOneStaff(ctx){
+    const sql = `select * from person where id=${ctx.params.id}`;
+    try {
+      let result = await query(sql);
+      console.log("get one staff ok")
+      ctx.response.body = result;
+    }catch (e) {
+      console.error(e)
+      console.log("get one staff wrong")
+    }
+  },
 };
 module.exports = user;

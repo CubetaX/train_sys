@@ -3,7 +3,7 @@ const config = {
   database:{
     host:'localhost',
     user:'root',
-    password:'root1234',
+    password:'root',
     port:'3306',
     database: 'train',
     insecureAuth :true

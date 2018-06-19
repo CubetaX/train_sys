@@ -5,8 +5,8 @@ import admin from '../pages/admin'
 import AllStaff from '../components/AllStaff'
 import PlanList from '../components/PlanList'
 import PlanStaff from '../components/PlanStaff'
+import Welcome from '../components/Welcome'
 Vue.use(Router)
-
 export default new Router({
  // mode: 'history',
   routes: [
@@ -20,21 +20,26 @@ export default new Router({
       component: login
     },
     {
-      path: '/admin/:id',
+      path: '/admin',
       name: 'admin',
-      component: admin,
+      component:admin,
       props: true,
       children:[
         {
-          path: '/admin/:id/allStaff',
+          path: '/admin/welcome',
+          component: Welcome,
+          props: true,
+        },
+        {
+          path: '/admin/allStaff',
           component: AllStaff
         },
         {
-          path: '/admin/:id/planList',
+          path: '/admin/planList',
           component: PlanList,
           children:[
             {
-            path: '/admin/:id/planList/:planId',
+            path: '/admin/planList/:planId',
             component: PlanStaff,
             props: true
            }

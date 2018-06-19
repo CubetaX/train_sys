@@ -27,31 +27,42 @@
           }
       },
       methods:{
-          login(){
-          axios({
-            method:'post',
-            url:'/api/login',
-            data:{
-              username: this.username,
-              password: this.password
-            }
-          }).then(response => {
-            console.log(response.data);
-            if (response.data === -1){
-              alert("用户不存在")
-            } else if (response.data === 0){
-              alert("密码错误")
-            }else{
+          login() {
+            axios({
+              method: 'post',
+              url: '/api/login',
+              data: {
+                username: this.username,
+                password: this.password
+              }
+            }).then(result => {
+              let data = result.data;
+              console.log(result.data);
+              if (data === -1) {
+                alert("用户不存在")
+              } else if (data === 0) {
+                alert("密码错误")
+              } else if (data.authority === 1) {
+                //管理员
+                this.$router.push({
+                  name: 'admin',
+                  params: {
+                    id: result.data.id,
+                    name: result.data.name,
+                  }
+                })
+              } else {
+                this.$router.push({
+                  name: 'staff',
+                  params: {
+                    id: result.data.id,
+                    name: result.data.name,
+                  }
+                })
+              }
               console.log("login ok");
-              this.$router.push(`/admin/${this.username}`)
-            }
-          },function (err) {
-            console.log(err)
+            })
           }
-         );   //必须有否则前面也无法使用
-          console.log("get!")
-
-        }
 
       }
 

@@ -3,7 +3,7 @@ const query = require('../sql/mysql')
 const plan = {
   async getPlan(ctx) {
     console.log("get all planSTaff")
-    console.log("query",ctx.url);
+    console.log("query",ctx.params.id);
     const sql = `select * from planstaff where course_id=${ctx.params.id} `;
     try {
       let result = await query(sql);
