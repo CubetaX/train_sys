@@ -43,9 +43,7 @@ const staff = {
     let  oldId = ctx.request.body.oldId;
 
     console.log(staff,oldId);
-    const sql = `update person set id="${staff.id}", password="${staff.password}", authority= ${staff.authority}, 
-    name="${staff.name}", sex="${staff.sex}", birthday="${staff.birthday}", job="${staff.job}", edu="${staff.edu}", speciaty="${staff.speciaty}", address="${staff.address}", tel="${staff.tel}", email="${staff.email}", state=${staff.state}, remark="${staff.remark}", department_id=${staff.department_id}
-    where id=${oldId}`;
+    const sql = `update person set id="${staff.id}", password="${staff.password}", authority= ${staff.authority},name="${staff.name}", sex="${staff.sex}", birthday="${staff.birthday}", job="${staff.job}", edu="${staff.edu}", speciaty="${staff.speciaty}", address="${staff.address}", tel="${staff.tel}", email="${staff.email}", state=${staff.state}, remark="${staff.remark}", department_id=${staff.department_id} where id=${oldId}`;
     try {
       let result = await  query(sql);
       ctx.response.body = result

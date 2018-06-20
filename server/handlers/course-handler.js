@@ -3,13 +3,13 @@ const query = require('../sql/mysql')
 const course = {
   async getAllCourse(ctx) {
     console.log("get all course")
-    const sql = "select * from course";
+    const sql = "SELECT id, name, teacher_id, intro, book, classroom, number, date_format(classtime,\"%Y-%m-%d\") as classtime, course_state_code, selectedNum FROM train.course;";
     let result = await query(sql);
     ctx.response.body = result
   },
   async deleteCourse(ctx) {
     console.log(ctx.request.body);
-    console.log("deletecourse");
+    console.log("delete course");
     const sql = `delete from course where id=${ctx.request.body.id}`;
     let result = await  query(sql);
     ctx.response.body = result
@@ -37,14 +37,13 @@ const course = {
     let  course = ctx.request.body.course;
     let  oldId = ctx.request.body.oldId;
 
-    console.log(course,oldId);
-    const sql = `update person set id="${course.id}", teacher_id=${course.teacher_id}, intro= "${course.intro}", 
-    name="${course.name}", classroom="${course.classroom}", book="${course.book}", classtime="${course.classtime}", number="${course.number}", selectedNum="${course.selectedNum}", course_state_code="${course.course_state_code}",
-    where id=${oldId}`;
+   // console.log(course,oldId);
+    const sql = `update course set id=${course.id}, teacher_id=${course.teacher_id}, intro= "${course.intro}",name="${course.name}", classroom="${course.classroom}", book="${course.book}", classtime="${course.classtime}", number=${course.number}, selectedNum=${course.selectedNum}, course_state_code=${course.course_state_code} where id=${oldId}`;
     try {
       let result = await  query(sql);
       ctx.response.body = result
     }catch (e) {
+      console.error(e)
       ctx.response.body = -1
     }
 

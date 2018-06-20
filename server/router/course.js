@@ -4,4 +4,5 @@ let course = new Router();
 course.get('/course',handler.getAllCourse)
   .delete('/course',handler.deleteCourse)
   .post('/course',handler.postCourse)
+  .put('/course',handler.updateCourse)
 module.exports = course;

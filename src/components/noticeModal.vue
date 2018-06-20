@@ -7,7 +7,7 @@
       </div>
       <div class="modal-footer">
         <slot name="footer">
-          <button type="submit" class="btn btn-primary" @click="submit">提交修改</button>
+          <button type="submit" class="btn btn-warning" @click="submit">确定</button>
           <button type="submit" class="btn btn-default" @click="close">关闭</button>
         </slot>
       </div>
@@ -25,7 +25,7 @@
       },
       submit(){
         this.$emit('closeModal')
-        this.$emit('deleteStaff')
+        this.$emit('delete')
       }
     }
   }

@@ -1,18 +1,18 @@
 <template>
 <div class="container">
   <div class="content">
-    <router-view> </router-view>
+    <router-view @update="update"  > </router-view>
   </div>
   <div class="side-bar">
     <div class="user">
-      <h1>欢迎{{userName}}</h1>
-      <a href="#/login">登出</a>
+      <h1>{{userName}}</h1>
+      <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
     </div>
     <div class="nav">
       <ul>
-        <router-link to="/admin/allStaff" > <li :class="selected==1?'selected':''" @click="select(1)">所有员工列表</li></router-link>
-        <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)">培训计划列表</li></router-link>
-        <router-link :to="`/admin/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)">修改个人资料</li></router-link>
+        <router-link to="/admin/allStaff" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>所有员工列表</li></router-link>
+        <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>培训计划列表</li></router-link>
+        <router-link  :to="`/admin/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)"><span class="glyphicon glyphicon-cog"></span>修改个人资料</li></router-link>
       </ul>
     </div>
   </div>
@@ -38,6 +38,11 @@
     ,
       name: "admin",
       methods:{
+      update(argv){
+        console.log(argv)
+       this.userId = argv.id;
+       this.userName = argv.name;
+      },
       select(num){
         this.selected = num;
       },
@@ -52,12 +57,18 @@
     margin:0;
     padding: 0;
     .side-bar {
+      h1{
+        font-style: normal;
+      };
       height: 1000px;
       width: 17%;
       background: #5BC0DE;
       color: white;
       ul{
         padding: 0;
+        span{
+          padding-right: 8px;
+        }
       }
       .nav{
         margin-top: 50px ;
@@ -69,7 +80,7 @@
         vertical-align: center;
         text-align: center;
         list-style: none;
-        padding-left: 20px;
+        padding-left: 0px;
         background: #337AB7;
         height: 50px;
         width: 100%;

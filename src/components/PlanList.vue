@@ -20,17 +20,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>JAVA</td>
-          <td>0518</td>
-          <td>逸夫楼308</td>
-          <td>德玛西亚</td>
-          <td>60</td>
-          <td>正在上课</td>
-          <td>2018-5-18</td>
-          <td>修改</td>
-        </tr>
+        <!--<tr>-->
+          <!--<td>1</td>-->
+          <!--<td>JAVA</td>-->
+          <!--<td>0518</td>-->
+          <!--<td>逸夫楼308</td>-->
+          <!--<td>德玛西亚</td>-->
+          <!--<td>60</td>-->
+          <!--<td>正在上课</td>-->
+          <!--<td>2018-5-18</td>-->
+          <!--<td>修改</td>-->
+        <!--</tr>-->
         <tr v-for="item in pageContent[pageNum] "@dblclick="select(item.id);look(item)" :class="item.id===selectId?'selected':''">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
@@ -40,16 +40,17 @@
           <td>{{item.selectedNum}}/{{item.number}}</td>
 
           <td>
-            <select v-model="item.course_state_code" class="selectMenu">
+            <select v-model="item.course_state_code" class="selectMenu" @change="updateCourse(item,item.id)"  style="color: deepskyblue; border: deepskyblue">
             <option value="0">选课中</option>
             <option value="1">进行中</option>
             <option value="2">已结束</option>
             </select>
           </td>
 
-          <td><span @click="look(item)">查看</span></td>
-          <td><span @click="edit(item)">修改</span>
-            <span @click="delete_(item)">删除</span>
+          <td><button class="btn btn-default" @click="look(item)">查看</button>
+          <td>
+            <button class="btn btn-default" @click="edit(item)">修改</button>
+            <button class="btn btn-danger" @click="delete_(item)">删除</button>
           </td>
 
         </tr>
@@ -81,7 +82,7 @@
          状态：
           <button class="btn btn-default">
           <select v-model="tempCourse.course_state_code" class="selectMenu">
-            <option value="0">选课中</option>
+            <option value="0" >选课中</option>
             <option value="1">进行中</option>
             <option value="2">已结束</option>
           </select>
@@ -89,7 +90,7 @@
        </span>
         </template>
       </form-modal>
-      <notice-modal @deleteCourse="deleteCourse" @closeModal="closeModal" v-show="showNoticeModal">
+      <notice-modal @delete="deleteCourse(tempCourse)" @closeModal="closeModal" v-show="showNoticeModal">
         <template slot="header">
           确定删除课程id号：{{tempCourse.id}} 课程名：{{tempCourse.name}}？
         </template>
@@ -122,7 +123,6 @@
             isLooking:false,
             pageContent:[],
             pageNum:0,
-            test:false,
             showFormModal: false,
             showNoticeModal: false,
             courses:[],
@@ -146,6 +146,7 @@
           }
       },
         methods: {
+          test(){alert('test')},
           select(selectId){
             this.selectId = selectId;
           },
@@ -187,7 +188,7 @@
                 if(result.data === - 1){
                   alert("修改失败")
                 }else {
-                  alert("修改成功")
+                 // alert("修改成功")
                   this.getCourse()
                   this.closeModal();
                 }

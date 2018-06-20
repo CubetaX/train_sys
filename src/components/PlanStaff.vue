@@ -20,16 +20,38 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>888</td>
-        <td>奥莉安娜</td>
-        <td>女</td>
-        <td>设计部</td>
-        <td>设计师</td>
-        <td><input type="date"></td>
-        <td><input type="text" value="99"></td>
+      <!--<tr>-->
+        <!--<td>888</td>-->
+        <!--<td>奥莉安娜</td>-->
+        <!--<td>女</td>-->
+        <!--<td>设计部</td>-->
+        <!--<td>设计师</td>-->
+        <!--<td><input type="date"></td>-->
+        <!--<td><input type="text" value="99"></td>-->
+        <!--<td>-->
+          <!--<select  class="selectMenu">-->
+            <!--<option value="0">未考核</option>-->
+            <!--<option value="1">不及格</option>-->
+            <!--<option value="2">及格</option>-->
+            <!--<option value="3">良好</option>-->
+            <!--<option value="4">优秀</option>-->
+          <!--</select>-->
+        <!--</td>-->
+        <!--<td>删除</td>-->
+      <!--</tr>-->
+      <tr v-for="item in pageContent[pageNum]" @click="select(item.id)" :class="item.id===selectId?'selected':''">
+        <td>{{item.person_id}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.sex}}</td>
+        <td>{{item.department_id}}</td>
+        <td>{{item.job}}</td>
+
         <td>
-          <select  class="selectMenu">
+          <input type="date" v-model.lazy="item.exam_date" @change="updatePlan(item)">
+        </td>
+        <td><input type="text" v-model.lazy="item.score" @change="updatePlan(item)"></td>
+        <td>
+          <select  class="selectMenu" v-model="item.apprisement_code" @change="updatePlan(item)">
             <option value="0">未考核</option>
             <option value="1">不及格</option>
             <option value="2">及格</option>
@@ -37,33 +59,15 @@
             <option value="4">优秀</option>
           </select>
         </td>
-        <td>删除</td>
-      </tr>
-      <tr v-for="item in pageContent[pageNum]" @click="select(item.id)" :class="item.id===selectId?'selected':''">
-        <td>{{item.id}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.sex}}</td>
-        <td>{{item.department_id}}</td>
-        <td>{{item.job}}</td>
-
         <td>
-          <span v-if="!item.exam_date">添加</span>
-          <span v-else>{{item.exam_date}}</span>
-        </td>
-        <td><input type="text" v-model="item.score"></td>
-        <td>
-          <span v-if="!item.apprisement_code">添加</span>
-          <span v-else>{{item.apprisement_name}}</span>
-        </td>
-        <td>
-          <span @click="delete_(item)">删除</span>
+          <button class="btn btn-danger" @click="delete_(item)">删除</button>
         </td>
       </tr>
       </tbody>
     </table>
 
     <div>
-      <button class="btn btn-primary" @click="newPlan">新增选修信息</button>
+      <button class="btn btn-primary" @click="newPlan">新增</button>
       <div class="pageControl">
         <button class="btn btn-default" @click="prePage" v-if="pageNum!=0">上一页</button>
         <button class="btn btn-default" @click="nextPage" v-if="pageNum!=(pageContent.length-1)">下一页</button>
@@ -75,24 +79,25 @@
         填写课程信息
       </template>
       <template slot="body">
-        <span class="notNull">*</span>
-        ID：<input type="text" class="form-control" placeholder="ID" v-model="tempPlan.id">
-        课程名：<input type="text" class="form-control" placeholder="课程名" v-model="tempPlan.name">
-        授课老师：<input type="text" class="form-control" placeholder="授课老师" v-model="tempPlan.teacher_id">
-        介绍：<input type="text" class="form-control" placeholder="介绍" v-model="tempPlan.intro">
-        教材：<input type="text" class="form-control" placeholder="教材" v-model="tempPlan.book">
-        上课教室：<input type="text" class="form-control" placeholder="上课人数" v-model="tempPlan.classroom">
-        上课人数：<input type="text" class="form-control" placeholder="上课人数" v-model="tempPlan.number">
-        上课时间：<input type="text" class="form-control" placeholder="上课时间" v-model="tempPlan.classtime">
-        课程状态<input type="text" class="form-control" placeholder="课程状态" v-model="tempPlan.course_state_code">
+
+        员工ID：<input type="text" class="form-control" placeholder="ID" v-model="tempPlan.person_id">
+        课程ID：< type="text" class="form-control" placeholder="课程ID" v-model="course.id">
+        分数：<input type="text" class="form-control" placeholder="分数" v-model="tempPlan.score">
+        考核时间：<input type="date" class="form-control"  v-model="tempPlan.exam_date">
+        评价： <select  class="selectMenu" v-model="tempPlan.apprisement_code">
+        <option value="0">未考核</option>
+        <option value="1">不及格</option>
+        <option value="2">及格</option>
+        <option value="3">良好</option>
+        <option value="4">优秀</option>
+      </select>
       </template>
     </form-modal>
-    <notice-modal @deletePlan="deletePlan" @closeModal="closeModal" v-show="showNoticeModal">
+    <notice-modal @delete="deletePlan(tempPlan)" @closeModal="closeModal" v-show="showNoticeModal">
       <template slot="header">
-        确定删除课程id号：{{tempPlan.id}} 课程名：{{tempPlan.name}}？
+        确定删除记录 学号：{{tempPlan.person_id}} 选修课名：{{course.name}}？
       </template>
     </notice-modal>
-    <!--<PlanStaff :></PlanStaff>-->
     <hr>
   </div>
   <div v-else>
@@ -114,7 +119,7 @@
     },
     created(){
       console.log("ps created")
-      this.getPlanStaff(this.course.id);
+      this.getPlan();
     },
 
     props:['course'],
@@ -170,11 +175,10 @@
           this.$set(this.pageContent,i,this.planStaff.slice(i*pageLen,(i+1)*pageLen))
         }
       },
-      getPlanStaff(val,oldVal) {
+      getPlan() {
         axios({
           method: "get",
           url: `/api/plan/${this.course.id}`,
-         // params:{'id':this.course.id}
         }).then(result => {
           console.log(result.data);
           this.planStaff = result.data;
@@ -182,20 +186,18 @@
         })
       },
 
-      updatePlan(course,oldId){
+      updatePlan(plan){
         console.log("update start")
         axios({
           method:'put',
-          url:"api/course",
+          url:"api/plan",
           data:{
-            course,
-            oldId
+            plan,
           }
         }).then(result => {
             if(result.data === - 1){
               alert("修改失败")
             }else {
-              alert("修改成功")
               this.getPlan()
               this.closeModal();
             }
@@ -206,7 +208,7 @@
         axios({
           method:'post',
           url:'api/plan',
-          data:{course:this.tempPlan}
+          data:{plan:this.tempPlan}
         }).then(response => {
           console.log(response.data)
           if ( response.data === -1)  {
@@ -219,11 +221,12 @@
           }
         })
       },
-      deletePlan(course){
+      deletePlan(plan){
         axios({
           method: 'delete',
           url: 'api/plan',
-          data:{id:course.id}
+          data:{id:plan.id,
+               course_id:this.course.id}
         }).then( result => {
             if(result.data === - 1){
               alert("删除失败")
@@ -251,6 +254,10 @@
       },
       newPlan(){
         this.tempPlan = {
+          exam_date :null,
+          course_id : this.course.id,
+          apprisement_code:0,
+          score :null
         };
         this.showFormModal = true
       },
@@ -261,7 +268,7 @@
 <style scoped>
   .selectMenu{
     color: deepskyblue;
-    border: 0;
+    border: 1px;
   }
   .selected{
     border:3px solid deepskyblue !important;

@@ -45,8 +45,8 @@
     <td v-if="item.authority===1">管理员</td>
     <td v-else>普通员工</td>
     <td>
-      <span @click="edit(item)">修改</span>
-      <span @click="delete_(item)">删除</span>
+      <button class="btn btn-default" @click="edit(item)">修改</button>
+      <button class="btn btn-danger" @click="delete_(item)">删除</button>
     </td>
   </tr>
   </tbody>
@@ -120,7 +120,7 @@
       </div>
     </template>
   </form-modal>
-  <notice-modal @deleteStaff="deleteStaff(tempStaff)" @closeModal="closeModal" v-show="showNoticeModal">
+  <notice-modal @delete="deleteStaff(tempStaff)" @closeModal="closeModal" v-show="showNoticeModal">
     <template slot="header">
       确定删除员工id号：{{tempStaff.id}} 姓名：{{tempStaff.name}}？
     </template>

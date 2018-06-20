@@ -5,13 +5,14 @@
   </h2>
   <span>id:<input type="text" class="form-control" placeholder="ID" v-model="userInfo.id"></span>
   <span>姓名：<input type="text" class="form-control" placeholder="姓名" v-model="userInfo.name"></span>
-  <span>性别
+  <div>性别
           <button class="btn btn-default">
           <select v-model="userInfo.sex" class="selectMenu">
             <option value="男">男</option>
             <option value="女">女</option>
           </select>
-        </button></span>
+        </button>
+  </div>
   <span>密码：<input type="text" class="form-control" placeholder="密码" v-model="userInfo.password"></span>
   <span>生日：<input type="text" class="form-control" placeholder="生日" v-model="userInfo.birthday"></span>
   <span>教育经历：<input type="text" class="form-control" placeholder="教育经历" v-model="userInfo.edu"></span>
@@ -53,7 +54,8 @@
         </button>
        </span>
   </div>
-  <button class="btn btn-primary">提交</button>
+  <button class="btn btn-primary" @click="updateUser(id)">提交</button>
+  <hr>
 </div>
 </template>
 
@@ -70,7 +72,6 @@
         data(){
           return{
             userInfo:{
-              id:null
             },
             deps:[]
           }
@@ -91,14 +92,32 @@
               url: `api/user/${id}`
             }).then(result => {
              //this.$set(this.userInfo,0,result.data.id)
-              this.userInfo = result.data;
+              this.userInfo = result.data[0];
               console.log(this.userInfo)
+              //this.$forceUpdate()
             })
           },
+          updateUser(oldId){
+            axios({
+              method:'put',
+              url: 'api/staff',
+              data:{
+                oldId,
+                staff:this.userInfo
+              }
+            }).then(result => {
+              console.log(this.userInfo)
+              this.$emit('update',{'id':this.userInfo.id,'name':this.userInfo.name})
+            })
+          }
         }
     }
 </script>
 
 <style scoped>
-
+  hr{
+    background: gray;
+    height: 2px;
+    border: none;
+  }
 </style>
