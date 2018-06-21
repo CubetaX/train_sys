@@ -2,10 +2,10 @@
     <div>
       <h2>
         <span class="label label-primary">已有培训计划</span>
-        <span class="label label-info" style="font-size: medium;">共{{courses.length}}条</span>
+        <span class="label label-info" style="font-size: medium;">共{{courses.length}}条 </span>
         <span class="search"><input @keyup.enter="searchCourse(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
       </h2>
-      <table class="table table-striped">
+      <table class="table table-hover">
         <thead>
         <tr>
           <th>课程编号</th>
@@ -20,17 +20,6 @@
         </tr>
         </thead>
         <tbody>
-        <!--<tr>-->
-          <!--<td>1</td>-->
-          <!--<td>JAVA</td>-->
-          <!--<td>0518</td>-->
-          <!--<td>逸夫楼308</td>-->
-          <!--<td>德玛西亚</td>-->
-          <!--<td>60</td>-->
-          <!--<td>正在上课</td>-->
-          <!--<td>2018-5-18</td>-->
-          <!--<td>修改</td>-->
-        <!--</tr>-->
         <tr v-for="item in pageContent[pageNum] "@dblclick="select(item.id);look(item)" :class="item.id===selectId?'selected':''">
           <td>{{item.id}}</td>
           <td>{{item.name}}</td>
@@ -47,12 +36,11 @@
             </select>
           </td>
 
-          <td><button class="btn btn-default" @click="look(item)">查看</button>
+          <td><button class="btn btn-default" style="height: 30px;" @click="select(item.id);look(item)"><span class="glyphicon glyphicon-chevron-down" ></span></button>
           <td>
             <button class="btn btn-default" @click="edit(item)">修改</button>
-            <button class="btn btn-danger" @click="delete_(item)">删除</button>
+            <button class="btn btn-danger " @click="delete_(item)">删除</button>
           </td>
-
         </tr>
         </tbody>
       </table>
@@ -70,8 +58,8 @@
           填写课程信息
         </template>
         <template slot="body">
-          <span>id:<input type="text" class="form-control" placeholder="ID" v-model="tempCourse.id"></span>
-          <span>课程名：<input type="text" class="form-control" placeholder="姓名" v-model="tempCourse.name"></span>
+          <span>id:<input type="text" class="form-control" placeholder="ID（必填，不能重复）" v-model="tempCourse.id"></span>
+          <span>课程名：<input type="text" class="form-control" placeholder="课程名（必填）" v-model="tempCourse.name"></span>
           <span>老师：<input type="text" class="form-control" placeholder="老师" v-model="tempCourse.teacher_id"></span>
           <span>简介：<input type="text" class="form-control" placeholder="简介" v-model="tempCourse.intro"></span>
           <span>教材：<input type="text" class="form-control" placeholder="教材" v-model="tempCourse.book"></span>
@@ -82,7 +70,7 @@
          状态：
           <button class="btn btn-default">
           <select v-model="tempCourse.course_state_code" class="selectMenu">
-            <option value="0" >选课中</option>
+            <option value="0">选课中</option>
             <option value="1">进行中</option>
             <option value="2">已结束</option>
           </select>
@@ -92,7 +80,7 @@
       </form-modal>
       <notice-modal @delete="deleteCourse(tempCourse)" @closeModal="closeModal" v-show="showNoticeModal">
         <template slot="header">
-          确定删除课程id号：{{tempCourse.id}} 课程名：{{tempCourse.name}}？
+          确定删除?(该课程下的所有学员信息也将删除)
         </template>
       </notice-modal>
       <hr>
@@ -101,8 +89,8 @@
 </template>
 
 <script>
-  import formModal from './formModal'
-  import noticeModal from './noticeModal'
+  import formModal from '../formModal'
+  import noticeModal from '../noticeModal'
   import axios from 'axios'
   import PlanStaff from './PlanStaff'
     export default {
@@ -134,8 +122,8 @@
               book:'',
               classroom: '',
               number: null,
-              classtime: '',
-              course_state_code:null,
+              classtime: null,
+              course_state_code:0,
               selectedNum:0,
             },
             oldId:null,
@@ -227,6 +215,26 @@
               }
             )
           },
+          searchCourse(key){
+            console.log("seaching")
+            axios({
+              method:'get',
+              url:`api/course/${key}`,
+            }).then(result =>{
+              if (result.data.length ===0 ){
+                alert("没有查到任何信息")
+              }
+              else{
+                alert("查到"+result.data.length +"信息")
+                console.log(result.data);
+                this.courses = result.data;
+                this.divideCourse()
+              }
+            })
+          },
+          sort(){
+
+          },
           delete_(Course){
             this.showNoticeModal = true;
             this.tempCourse = Course;
@@ -250,13 +258,13 @@
             this.tempCourse = {
                 id:'',
                 name: '',
-                teacher_id: null,
+                teacher_id: '',
                 intro:'',
                 book:'',
                 classroom: '',
-                number: null,
-                classtime: '',
-                course_state_code:null,
+                number: 50,
+                classtime: null,
+                course_state_code:0,
                 selectedNum:0,
             };
             this.showFormModal = true
@@ -271,7 +279,7 @@
     font-weight: normal;
   }
   .selected{
-    background: #CCFFFF !important;
+    background: rgba(86, 255, 228, 0.15) !important;
   }
   .search{
     display: inline-block;

@@ -6,7 +6,7 @@
 
   <div class="input-group">
     <span class="input-group-addon" >I D</span>
-    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.id">
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" :disabled="isAdmin?null:'disabled'" v-model="userInfo.id">
   </div>
 
   <div class="input-group">
@@ -20,7 +20,7 @@
 
   <div class="input-group">
     <span class="input-group-addon" >生日</span>
-    <input type="date" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.birthday">
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.birthday">
   </div>
 
   <div class="input-group">
@@ -33,7 +33,7 @@
 
   <div class="input-group">
     <span class="input-group-addon" >学历</span>
-    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.edu">
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" :disabled="isAdmin?null:'disabled'" v-model="userInfo.edu">
   </div>
 
    <div class="input-group">
@@ -60,25 +60,24 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon" >职位</span>
-    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.job">
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" :disabled="isAdmin?null:'disabled'" v-model="userInfo.job">
   </div>
   <div class="input-group">
     <span class="input-group-addon"  >权限</span>
-    <select v-model="userInfo.authority" class="selectMenu">
+    <select v-model="userInfo.authority" class="selectMenu" :disabled="isAdmin?null:'disabled'" :style="isAdmin?'':'background:#EEEEEE'">
       <option value="0">普通员工</option>
       <option value="1">管理员</option>
     </select>
   </div>
   <div class="input-group">
     <span class="input-group-addon" >部门</span>
-    <select v-model="userInfo.department_id" class="selectMenu">
+    <select v-model="userInfo.department_id" class="selectMenu" :disabled="isAdmin?null:'disabled'" :style="isAdmin?'':'background:#EEEEEE'">
       <option  v-for="dep in deps" :value="dep.id">{{dep.name}}</option>
-      <option value="null">未分配</option>
     </select>
   </div>
   <div class="input-group">
     <span class="input-group-addon" >状态</span>
-    <select v-model="userInfo.state" class="selectMenu">
+    <select v-model="userInfo.state" class="selectMenu" :disabled="isAdmin?null:'disabled'" :style="isAdmin?'':'background:#EEEEEE'">
       <option value="0">正式员工</option>
       <option value="1">非正式员工</option>
     </select>
@@ -106,7 +105,8 @@
             oldId:this.id,
             deps:[],
             state:null,
-            errMsg:''
+            errMsg:'',
+            isAdmin:false,
           }
         },
         methods:{
@@ -125,6 +125,9 @@
               url: `api/user/${id}`
             }).then(result => {
               this.userInfo = result.data[0];
+              if (this.userInfo.authority==1){
+                this.isAdmin = true;
+              }
             })
           },
           updateUser(){

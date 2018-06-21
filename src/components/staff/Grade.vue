@@ -1,10 +1,13 @@
 <template>
+<div>
+  this is grade
 
+</div>
 </template>
 
 <script>
     export default {
-        name: "findStaff"
+        name: "Grade"
     }
 </script>
 

@@ -31,10 +31,21 @@ const plan = {
       console.error(e)
     }
   },
-  async getPlan(ctx) {
+  async getStaffByCourse(ctx) {
     console.log("get all planSTaff")
     console.log("query",ctx.params.id);
     const sql = `select * from planstaff where course_id=${ctx.params.id} `;
+    try {
+      let result = await query(sql)
+      ctx.response.body = result;
+    }catch(e){
+      console.error(e)
+    }
+  },
+  async getCourseByStaff(ctx) {
+    console.log("get all plan course")
+    console.log("query",ctx.params.id);
+    const sql = `select * from planstaff where person_id=${ctx.params.id} `;
     try {
       let result = await query(sql)
       ctx.response.body = result;
@@ -108,7 +119,7 @@ const plan = {
     }catch (e) {
       ctx.response.body = -1
       console.log("search wrong")
-      console.log(err)
+      console.error(e)
     }
   },
 

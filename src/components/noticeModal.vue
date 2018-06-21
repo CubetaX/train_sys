@@ -2,12 +2,7 @@
   <div class="modal-backdrop">
     <div class="modal">
       <div class="modal-header">
-        确定删除？
         <slot name="header">
-        </slot>
-      </div>
-      <div class="modal-body">
-        <slot name="body">
         </slot>
       </div>
       <div class="modal-footer">
@@ -40,8 +35,8 @@
 .modal {
   top: 40%;
   left: 40%;
-  height: 200px;
-  width: 200px;
+  height: 130px;
+  width: 400px;
    background-color: #fff; box-shadow: 2px 2px 20px 1px; overflow-x:auto; display: flex; flex-direction: column; }
 .modal-header, .modal-footer { padding: 15px; display: flex; }
 .modal-header { border-bottom: 1px solid #eee; color: #4aae9b; justify-content: space-between; }

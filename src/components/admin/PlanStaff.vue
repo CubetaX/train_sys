@@ -5,7 +5,7 @@
       <span class="label label-info" style="font-size: medium;">共{{course.selectedNum}}名</span>
       <span class="search"><input @keyup.enter="searchPlan(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
     </h2>
-    <table class="table table-striped">
+    <table class="table table-bordered  table-hover">
       <thead>
       <tr>
         <th>员工ID</th>
@@ -41,15 +41,15 @@
       <!--</tr>-->
       <tr v-for="item in pageContent[pageNum]" @click="select(item.id)" :class="item.id===selectId?'selected':''">
         <td>{{item.person_id}}</td>
-        <td>{{item.name}}</td>
+        <td>{{item.person_name}}</td>
         <td>{{item.sex}}</td>
-        <td>{{item.department_id}}</td>
+        <td>{{item.department_name}}</td>
         <td>{{item.job}}</td>
 
         <td>
-          <input type="date" v-model.lazy="item.exam_date" @change="updatePlan(item)">
+          <input type="date" v-model.lazy="item.exam_date" @change="updatePlan(item)" >
         </td>
-        <td><input type="text" v-model.lazy="item.score" @change="updatePlan(item)"></td>
+        <td><input type="text" v-model.lazy="item.score" @change="updatePlan(item)" placeholder="填入成绩自动提交"></td>
         <td>
           <select  class="selectMenu" v-model="item.apprisement_code" @change="updatePlan(item)">
             <option value="0">未考核</option>
@@ -81,7 +81,7 @@
       </template>
       <template slot="body">
         员工ID：<input type="text" class="form-control" placeholder="ID" v-model="tempPlan.person_id">
-        课程ID：< type="text" class="form-control" placeholder="课程ID" v-model="course.id">
+        <!--课程ID：<input type="text" class="form-control" placeholder="课程ID" v-model="course.id">-->
         分数：<input type="text" class="form-control" placeholder="分数" v-model="tempPlan.score">
         考核时间：<input type="date" class="form-control"  v-model="tempPlan.exam_date">
         评价： <select  class="selectMenu" v-model="tempPlan.apprisement_code">
@@ -95,7 +95,7 @@
     </form-modal>
     <notice-modal @delete="deletePlan(tempPlan)" @closeModal="closeModal" v-show="showNoticeModal">
       <template slot="header">
-        确定删除记录 学号：{{tempPlan.person_id}} 选修课名：{{course.name}}？
+        确定删除记录？
       </template>
     </notice-modal>
     <hr>
@@ -108,8 +108,8 @@
 </template>
 
 <script>
-  import formModal from './formModal'
-  import noticeModal from './noticeModal'
+  import formModal from '../formModal'
+  import noticeModal from '../noticeModal'
   import axios from 'axios'
   export default {
     name: "PlanStaff",
@@ -148,7 +148,6 @@
         pageNum:0,
         showFormModal: false,
         showNoticeModal: false,
-        courses:[],
         tempPlan:{
 
         },
@@ -178,7 +177,7 @@
       getPlan() {
         axios({
           method: "get",
-          url: `/api/plan/${this.course.id}`,
+          url: `/api/plan/course/${this.course.id}`,
         }).then(result => {
           console.log(result.data);
           this.planStaff = result.data;
@@ -186,7 +185,7 @@
         })
       },
       getExcel(){
-        window.location.href = `api/plan/${this.course.id}/excel`;
+        window.location.href = `api/plan/course/${this.course.id}/excel`;
         //   axios({
       //     method: 'get',
       //     url: `/api/plan/${this.course.id}/excel`,
@@ -214,6 +213,13 @@
         )
       },
       postPlan(){
+        for (let i=0;i<this.planStaff.length;i++){
+          if (this.tempPlan.person_id == this.planStaff[i].person_id){
+            this.showFormModal = true;
+            alert("插入失败,该学园已加入本课程")
+            return;
+          }
+        }
         axios({
           method:'post',
           url:'api/plan',
@@ -222,7 +228,7 @@
           console.log(response.data)
           if ( response.data === -1)  {
             this.showFormModal = true;
-            alert("插入失败")
+            alert("插入失败，员工ID不存在")
           }
           else{
             this.getPlan();

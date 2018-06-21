@@ -6,7 +6,7 @@
     <router-view @update="update"  > </router-view>
   </div>
   <div class="side-bar">
-    <div class="user" style="font-weight:390" >
+    <div class="user" style="font-weight:300" >
       <h1 style="font-weight: 100"><a href="#/admin/welcome">{{userName}}</a></h1>
       <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
     </div>
@@ -55,7 +55,7 @@
 
   .container{
 
-    background: #F7F7F7;
+    background: white;
     width: 100%;
     height: 100%;
     margin:0;
@@ -110,4 +110,19 @@
     width: 79%;
     //margin-left: 50px;
   }
+
+  /*.fade-enter-active,.fade-leave-active{*/
+    /*transition:  all 1s ease-out;*/
+    /*opacity: 1;*/
+  /*}*/
+  /*!* 进入开始 *!*/
+  /*.fade-enter{*/
+    /*transform: translateY(0px);*/
+    /*opacity: 0;*/
+  /*}*/
+  /*!* 出去终点 *!*/
+  /*.fade-leave-active{*/
+    /*transform: translateY(-500px);*/
+    /*opacity: 0;*/
+  /*}*/
 </style>

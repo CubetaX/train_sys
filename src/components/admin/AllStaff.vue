@@ -6,7 +6,7 @@
     <span class="search"><input @keyup.enter="searchStaff(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
   </h2>
 
-  <table class="table table-striped">
+  <table class="table table-striped  table-hover">
     <thead>
     <tr>
       <th>#</th>
@@ -37,9 +37,9 @@
     <td>{{item.id}}</td>
     <td>{{item.name}}</td>
     <td>{{item.sex}}</td>
-    <td>{{item.department_id}}</td>
-    <!--<td v-if="item.department_id==null"></td>-->
-    <!--<td v-else v-for="dep in deps" v-if="item.department_id==dep.id">{{dep.name}}</td>-->
+    <td>{{deps[item.department_id].name}}</td>
+    <!--<td v-show="item.department_id==null">未分配</td>-->
+
     <td>{{item.job}}</td>
     <td>{{item.tel}}</td>
     <td v-if="item.authority===1">管理员</td>
@@ -112,7 +112,6 @@
          <button class="btn btn-default">
           <select v-model="tempStaff.department_id" class="selectMenu">
             <option  v-for="dep in deps" :value="dep.id">{{dep.name}}</option>
-            <option value="null">未分配</option>
           </select>
         </button>
        </span>
@@ -121,8 +120,8 @@
     </template>
   </form-modal>
   <notice-modal @delete="deleteStaff(tempStaff)" @closeModal="closeModal" v-show="showNoticeModal">
-    <template slot="body">
-      该员工的选课信息也将同时删除
+    <template slot="header">
+      确定删除？(该员工的选课信息也将同时删除)
     </template>
   </notice-modal>
   <hr>
@@ -131,9 +130,9 @@
 
 <script>
   import axios from 'axios'
-  import formModal from './formModal'
-  import noticeModal from './noticeModal'
-  import index from "../router";
+  import formModal from '../formModal'
+  import noticeModal from '../noticeModal'
+  import index from "../../router/index";
     export default {
       data(){
         return{
@@ -153,7 +152,7 @@
             speciaty: '',
             email: '',
             remark: '',
-            department_id: null,
+            department_id:0,
             state: null,
             authority: null,
 
@@ -172,6 +171,7 @@
       },
       name: "AllStaff",
       props:["username"],
+
       created(){
         console.log("created~")
         this.getStaff(); //先执行下面
@@ -273,7 +273,6 @@
             )
           },
         searchStaff(key){
-          alert(key);
           console.log("seaching")
           axios({
             method:'get',
@@ -323,9 +322,9 @@
               speciaty: '',
               email: '',
               remark: '',
-              department_id: null,
-              state: null,
-              authority: null,
+              department_id: 0,
+              state: 0,
+              authority: 0,
           }
           this.showFormModal = true;
         }

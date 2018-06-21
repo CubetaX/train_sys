@@ -3,11 +3,13 @@ import Router from 'vue-router'
 import login from '../pages/login'
 import staff from '../pages/staff'
 import admin from '../pages/admin'
-import AllStaff from '../components/AllStaff'
-import PlanList from '../components/PlanList'
-import PlanStaff from '../components/PlanStaff'
+import AllStaff from '../components/admin/AllStaff'
+import PlanList from '../components/admin/PlanList'
+import PlanStaff from '../components/admin/PlanStaff'
 import Welcome from '../components/Welcome'
 import UserInfo from '../components/UserInfo'
+import SelectCourse from '../components/staff/SelectCourse'
+import Grade from '../components/staff/Grade'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -37,8 +39,12 @@ export default new Router({
           props: true
         },
         {
-          path: '/staff/planList',
-          component: PlanList,
+          path: '/staff/selectCourse',
+          component: SelectCourse,
+        },
+        {
+          path: '/staff/grade',
+          component: Grade,
         }
       ]
     },

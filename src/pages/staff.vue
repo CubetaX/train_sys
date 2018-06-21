@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <div class="content">
-      <router-view @update="update"  > </router-view>
+      <router-view @update="update"> </router-view>
     </div>
     <div class="side-bar">
       <div class="user">
-        <h1><a href="#/admin/welcome">{{userName}}</a></h1>
+        <h1><a href="#/staff/welcome">{{userName}}</a></h1>
         <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
       </div>
       <div class="nav">
         <ul>
-          <router-link to="/admin/allStaff" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>选课列表</li></router-link>
-          <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>成绩查询</li></router-link>
-          <router-link  :to="`/admin/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)"><span class="glyphicon glyphicon-cog"></span>修改个人资料</li></router-link>
+          <router-link to="/staff/selectCourse" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>选课列表</li></router-link>
+          <router-link to="/staff/grade"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>成绩查询</li></router-link>
+          <router-link  :to="`/staff/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)"><span class="glyphicon glyphicon-cog"></span>修改个人资料</li></router-link>
         </ul>
       </div>
     </div>
@@ -25,7 +25,7 @@
 
   export default {
     created(){
-      this.$router.push('/admin/welcome')  //'/根目录开始 如果没有则从当前开始'
+      this.$router.push('/staff/welcome')  //'/根目录开始 如果没有则从当前开始'
     },
     data(){
       return{
@@ -36,7 +36,7 @@
       }
     }
     ,
-    name: "admin",
+    name: "staff",
     methods:{
       update(argv){
         console.log(argv)
@@ -51,15 +51,17 @@
 </script>
 
 <style lang="less">
+
   .container{
-    background: #F7F7F7;
+
+    background: white;
     width: 100%;
     height: 100%;
     margin:0;
     padding: 0;
     .side-bar {
       .user{
-        padding-left: 10px;
+        padding-left: 30px;
         h1{
           font-style: normal;
           display: inline-block;
@@ -69,7 +71,7 @@
 
       height: 1000px;
       width: 20%;
-      background: black;
+      background: rgba(36, 190, 214, 0.54);
       color: white;
       ul{
         padding: 0;
@@ -88,16 +90,16 @@
         text-align: center;
         list-style: none;
         padding-left: 0px;
-        background: #337AB7;
+        background: #26c3dd;
         height: 50px;
         width: 100%;
       }
 
       li:hover{
-        background-color: #0e24b7;
+        background-color: rgba(23, 161, 224, 0.91);
       }
       .selected{
-        background-color: #0e24b7;
+        background-color: rgba(23, 161, 224, 0.91);
       }
     }
   }
@@ -105,6 +107,7 @@
   .content{
     float: right;
     width: 79%;
-    //margin-left: 50px;
+
   }
+
 </style>

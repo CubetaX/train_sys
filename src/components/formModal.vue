@@ -77,7 +77,7 @@
   padding-top: 5px;
   overflow: hidden }
 .modal-body {
-
+ height: 300px;
   position: relative;
   overflow:auto;}
   .btn{
