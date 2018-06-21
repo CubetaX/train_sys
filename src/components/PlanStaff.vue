@@ -2,7 +2,7 @@
   <div v-if="course.selectedNum!=0">
     <h2>
       <span class="label label-success">{{course.name}}</span>
-      <span class="label label-info">共有{{course.selectedNum}}名员工</span>
+      <span class="label label-info" style="font-size: medium;">共{{course.selectedNum}}名</span>
       <span class="search"><input @keyup.enter="searchPlan(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
     </h2>
     <table class="table table-striped">
@@ -68,6 +68,7 @@
 
     <div>
       <button class="btn btn-primary" @click="newPlan">新增</button>
+      <button class="btn btn-primary" @click="getExcel">打印</button>
       <div class="pageControl">
         <button class="btn btn-default" @click="prePage" v-if="pageNum!=0">上一页</button>
         <button class="btn btn-default" @click="nextPage" v-if="pageNum!=(pageContent.length-1)">下一页</button>
@@ -79,7 +80,6 @@
         填写课程信息
       </template>
       <template slot="body">
-
         员工ID：<input type="text" class="form-control" placeholder="ID" v-model="tempPlan.person_id">
         课程ID：< type="text" class="form-control" placeholder="课程ID" v-model="course.id">
         分数：<input type="text" class="form-control" placeholder="分数" v-model="tempPlan.score">
@@ -185,7 +185,16 @@
           this.dividePlan()
         })
       },
-
+      getExcel(){
+        window.location.href = `api/plan/${this.course.id}/excel`;
+        //   axios({
+      //     method: 'get',
+      //     url: `/api/plan/${this.course.id}/excel`,
+      //   }).then(result =>{
+      //     console.log(result.data)
+      //     console.log('excel')
+      //   })
+       },
       updatePlan(plan){
         console.log("update start")
         axios({
@@ -266,6 +275,9 @@
 </script>
 
 <style scoped>
+  .label{
+    font-weight: normal;
+  }
   .selectMenu{
     color: deepskyblue;
     border: 1px;
@@ -276,7 +288,7 @@
   .search{
     display: inline-block;
     float: right;
-    width: 30%;
+    width: 40%;
   }
   .pageControl{
     float: right;
@@ -290,9 +302,7 @@
   tbody span:hover{
     cursor: pointer;
   }
-  input{
-    border: 0;
-  }
+
   hr{
     background: gray;
     height: 2px;

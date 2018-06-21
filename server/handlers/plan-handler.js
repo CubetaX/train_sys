@@ -1,29 +1,46 @@
+const fs = require('fs')
 const xlsx = require('node-xlsx')
 const query = require('../sql/mysql')
+const Buffer = require('buffer').Buffer
 const plan = {
-  async getPlan(ctx) {
-    console.log("get all planSTaff")
-    console.log("query",ctx.params.id);
+  async getExcel(ctx){
 
-    const sql = `select * from planstaff where course_id=${ctx.params.id} `;
+    console.log('get excel')
+    let courseName = await query(`select name from course where id=${ctx.params.id}`);
+    courseName = courseName[0].name;
+    let test = Buffer.from(courseName+"成绩总单"+'.xlsx');
+
+    const sql = `select person_id,name,sex,department_name,score,apprisement_name,exam_date from planstaff where course_id=${ctx.params.id} `;
     try {
-      let result = await query(sql)
-      ctx.response.body = result
-      console.log(result);
-      const sql2 = `select person_id,person_name,sex,department_name,score,apprisement_name,exam_date from planstaff where course_id=${ctx.params.id} `;
-      let data = [['ID','姓名','性别','部门','分数','评价','考核日期']]
-      console.log(data[1])
+      let result = await query(sql);
+      let data = [['ID','姓名','性别','部门','分数','评价','考核日期']];
       for (let i=0;i<result.length;i++){
         data[i+1]=[];
-        for (let attr in result[i]){
+        for (let attr in result[i]){  //read first seven attr  /no courseName
           data[i+1].push(result[i][attr])
         }
       }
-      console.log(data)
+      let buffer = xlsx.build([{name: courseName, data: data}])
+      ctx.set({
+        'connection':'keep-alive',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': "attachment; filename="+encodeURIComponent(test)   //encode！！！！！全局变量
+      });
+      ctx.body = buffer;
+    }catch (e) {
+      console.error(e)
+    }
+  },
+  async getPlan(ctx) {
+    console.log("get all planSTaff")
+    console.log("query",ctx.params.id);
+    const sql = `select * from planstaff where course_id=${ctx.params.id} `;
+    try {
+      let result = await query(sql)
+      ctx.response.body = result;
     }catch(e){
       console.error(e)
     }
-
   },
   async deletePlan(ctx) {
     console.log(ctx.request.body);

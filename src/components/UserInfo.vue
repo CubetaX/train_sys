@@ -3,58 +3,89 @@
   <h2>
     <span class="label label-primary">我的个人信息</span>
   </h2>
-  <span>id:<input type="text" class="form-control" placeholder="ID" v-model="userInfo.id"></span>
-  <span>姓名：<input type="text" class="form-control" placeholder="姓名" v-model="userInfo.name"></span>
-  <div>性别
-          <button class="btn btn-default">
-          <select v-model="userInfo.sex" class="selectMenu">
-            <option value="男">男</option>
-            <option value="女">女</option>
-          </select>
-        </button>
+
+  <div class="input-group">
+    <span class="input-group-addon" >I D</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.id">
   </div>
-  <span>密码：<input type="text" class="form-control" placeholder="密码" v-model="userInfo.password"></span>
-  <span>生日：<input type="text" class="form-control" placeholder="生日" v-model="userInfo.birthday"></span>
-  <span>教育经历：<input type="text" class="form-control" placeholder="教育经历" v-model="userInfo.edu"></span>
-  <span>技能：<input type="text" class="form-control" placeholder="技能" v-model="userInfo.speciaty"></span>
-  <span>地址：<input type="text" class="form-control" placeholder="地址" v-model="userInfo.address"></span>
-  <span>电话：<input type="text" class="form-control" placeholder="电话" v-model="userInfo.tel"></span>
-  <span>邮箱：<input type="text" class="form-control" placeholder="邮箱" v-model="userInfo.email"></span>
-  <!--<span>状态：<input type="text" class="form-control" placeholder="状态" v-model="userInfo.state"></span>-->
-  <span>备注：<input type="text" class="form-control" placeholder="备注" v-model="userInfo.remark"></span>
-  <!--<span>部门：<input type="text" class="form-control" placeholder="部门" v-model="userInfo.department_id"></span>-->
-  <span>职位：<input type="text" class="form-control" placeholder="职位" v-model="userInfo.job"></span>
-  <div class="select-group">
-        <span>
-          权限：
-          <button class="btn btn-default">
-          <select v-model="userInfo.authority" class="selectMenu">
-            <option value="0">普通员工</option>
-            <option value="1">管理员</option>
-          </select>
-        </button>
-        </span>
-    <!--<input type="text" class="form-control" placeholder="权限" v-model="userInfo.authority">-->
-    <span>
-         状态：
-          <button class="btn btn-default">
-          <select v-model="userInfo.state" class="selectMenu">
-            <option value="0">正式员工</option>
-            <option value="1">非正式员工</option>
-          </select>
-        </button>
-       </span>
-    <span>
-         部门：
-         <button class="btn btn-default">
-          <select v-model="userInfo.department_id" class="selectMenu">
-            <option  v-for="dep in deps" :value="dep.id">{{dep.name}}</option>
-            <option value="null">未分配</option>
-          </select>
-        </button>
-       </span>
+
+  <div class="input-group">
+    <span class="input-group-addon" >密码</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.password">
   </div>
-  <button class="btn btn-primary" @click="updateUser(id)">提交</button>
+  <div class="input-group">
+    <span class="input-group-addon" >姓名</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.name">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" >生日</span>
+    <input type="date" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.birthday">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" >性别</span>
+    <select v-model="userInfo.sex" class="selectMenu">
+      <option value="男">男</option>
+      <option value="女">女</option>
+    </select>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" >学历</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.edu">
+  </div>
+
+   <div class="input-group">
+    <span class="input-group-addon" >技能</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.speciaty">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" >地址</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.address">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon" >电话</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.tel">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" >邮箱</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.email">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" >备注</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.remark">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" >职位</span>
+    <input type="text" class="form-control"  aria-describedby="basic-addon1" v-model="userInfo.job">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"  >权限</span>
+    <select v-model="userInfo.authority" class="selectMenu">
+      <option value="0">普通员工</option>
+      <option value="1">管理员</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" >部门</span>
+    <select v-model="userInfo.department_id" class="selectMenu">
+      <option  v-for="dep in deps" :value="dep.id">{{dep.name}}</option>
+      <option value="null">未分配</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" >状态</span>
+    <select v-model="userInfo.state" class="selectMenu">
+      <option value="0">正式员工</option>
+      <option value="1">非正式员工</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" @click="updateUser()">提交修改</button>
+  <div v-show='state===1' class="alert alert-success" role="alert">修改成功！</div>
+  <div v-show='state===-1' class="alert alert-danger" role="alert">修改失败！请检查输入数据是否规范 !  {{errMsg}}</div>
   <hr>
 </div>
 </template>
@@ -65,7 +96,6 @@
         name: "UserInfo",
         props:['id'],
         created(){
-          console.log(this.id)
           this.getUserInfo(this.id)
           this.getDep()
         },
@@ -73,7 +103,10 @@
           return{
             userInfo:{
             },
-            deps:[]
+            oldId:this.id,
+            deps:[],
+            state:null,
+            errMsg:''
           }
         },
         methods:{
@@ -91,23 +124,30 @@
               method: 'get',
               url: `api/user/${id}`
             }).then(result => {
-             //this.$set(this.userInfo,0,result.data.id)
               this.userInfo = result.data[0];
-              console.log(this.userInfo)
-              //this.$forceUpdate()
             })
           },
-          updateUser(oldId){
+          updateUser(){
+            this.state = null;
             axios({
               method:'put',
               url: 'api/staff',
               data:{
-                oldId,
+                oldId:this.oldId,
                 staff:this.userInfo
               }
             }).then(result => {
-              console.log(this.userInfo)
-              this.$emit('update',{'id':this.userInfo.id,'name':this.userInfo.name})
+              if (result.data!==1){
+                this.errMsg = result.data;
+                this.state = -1;
+              }
+              else {
+                this.oldId = this.userInfo.id;
+                this.state = 1;
+                console.log(this.userInfo)
+                this.$emit('update',{'id':this.userInfo.id,'name':this.userInfo.name})
+              }
+
             })
           }
         }
@@ -115,9 +155,21 @@
 </script>
 
 <style scoped>
+  .label{
+    font-weight: normal;
+  }
+  .alert{
+    margin-top: 5px;}
+  .input-group{
+    margin-bottom: 5px;
+  }
+  .selectMenu{
+    height: 35px;
+  }
   hr{
     background: gray;
     height: 2px;
     border: none;
+    width: 100%;
   }
 </style>

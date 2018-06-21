@@ -1,13 +1,110 @@
 <template>
+  <div class="container">
+    <div class="content">
+      <router-view @update="update"  > </router-view>
+    </div>
+    <div class="side-bar">
+      <div class="user">
+        <h1><a href="#/admin/welcome">{{userName}}</a></h1>
+        <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
+      </div>
+      <div class="nav">
+        <ul>
+          <router-link to="/admin/allStaff" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>选课列表</li></router-link>
+          <router-link to="/admin/planList"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>成绩查询</li></router-link>
+          <router-link  :to="`/admin/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)"><span class="glyphicon glyphicon-cog"></span>修改个人资料</li></router-link>
+        </ul>
+      </div>
+    </div>
 
+
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "staff"
+
+  export default {
+    created(){
+      this.$router.push('/admin/welcome')  //'/根目录开始 如果没有则从当前开始'
+    },
+    data(){
+      return{
+        view:'',
+        selected:null,
+        userId:this.$route.params.id,
+        userName: this.$route.params.name,
+      }
     }
+    ,
+    name: "admin",
+    methods:{
+      update(argv){
+        console.log(argv)
+        this.userId = argv.id;
+        this.userName = argv.name;
+      },
+      select(num){
+        this.selected = num;
+      },
+    }
+  }
 </script>
 
-<style scoped>
+<style lang="less">
+  .container{
+    background: #F7F7F7;
+    width: 100%;
+    height: 100%;
+    margin:0;
+    padding: 0;
+    .side-bar {
+      .user{
+        padding-left: 10px;
+        h1{
+          font-style: normal;
+          display: inline-block;
+          margin-right: 50px;
+        };
+      }
 
+      height: 1000px;
+      width: 20%;
+      background: black;
+      color: white;
+      ul{
+        padding: 0;
+        span{
+          padding-right: 8px;
+        }
+      }
+      .nav{
+        margin-top: 50px ;
+      }
+      li{
+        font-size: 15px;
+        color: white;
+        line-height: 50px;//让文字居中
+        vertical-align: center;
+        text-align: center;
+        list-style: none;
+        padding-left: 0px;
+        background: #337AB7;
+        height: 50px;
+        width: 100%;
+      }
+
+      li:hover{
+        background-color: #0e24b7;
+      }
+      .selected{
+        background-color: #0e24b7;
+      }
+    }
+  }
+
+  .content{
+    float: right;
+    width: 79%;
+    //margin-left: 50px;
+  }
 </style>

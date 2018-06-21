@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '../pages/login'
+import staff from '../pages/staff'
 import admin from '../pages/admin'
 import AllStaff from '../components/AllStaff'
 import PlanList from '../components/PlanList'
@@ -9,7 +10,6 @@ import Welcome from '../components/Welcome'
 import UserInfo from '../components/UserInfo'
 Vue.use(Router)
 export default new Router({
- // mode: 'history',
   routes: [
     {
       path: '/',
@@ -20,6 +20,29 @@ export default new Router({
       name: 'login',
       component: login
     },
+    {
+      path: '/staff',
+      name: 'staff',
+      component:staff,
+      props: true,
+      children:[
+        {
+          path: '/staff/welcome',
+          component: Welcome,
+          props: true,
+        },
+        {
+          path: '/staff/userInfo/:id',
+          component: UserInfo,
+          props: true
+        },
+        {
+          path: '/staff/planList',
+          component: PlanList,
+        }
+      ]
+    },
+
     {
       path: '/admin',
       name: 'admin',

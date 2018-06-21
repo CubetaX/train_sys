@@ -4,7 +4,6 @@
 
     <div class="modal"  @click="isBack=false">
   <div class="modal-header">
-
     <slot name="header">
     </slot>
   </div>

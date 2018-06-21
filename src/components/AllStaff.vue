@@ -2,7 +2,7 @@
 <div>
   <h2>
     <span class="label label-primary">所有员工信息</span>
-    <span class="label label-info">共有{{staff.length}}条信息</span>
+    <span class="label label-info" style="font-size: medium">共{{staff.length}}条</span>
     <span class="search"><input @keyup.enter="searchStaff(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
   </h2>
 
@@ -121,8 +121,8 @@
     </template>
   </form-modal>
   <notice-modal @delete="deleteStaff(tempStaff)" @closeModal="closeModal" v-show="showNoticeModal">
-    <template slot="header">
-      确定删除员工id号：{{tempStaff.id}} 姓名：{{tempStaff.name}}？
+    <template slot="body">
+      该员工的选课信息也将同时删除
     </template>
   </notice-modal>
   <hr>
@@ -334,12 +334,16 @@
     }
 </script>
 
-<style scoped>
-  .search{
-    display: inline-block;
-    float: right;
-    width: 30%;
+<style scoped >
+  .label{
+    font-weight: normal;
   }
+  .search{
+       display: inline-block;
+       float: right;
+       width: 40%;
+     }
+
   thead{
     background:#CCFFFF;
   }

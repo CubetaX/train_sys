@@ -1,11 +1,13 @@
 <template>
+
+
 <div class="container">
   <div class="content">
     <router-view @update="update"  > </router-view>
   </div>
   <div class="side-bar">
-    <div class="user">
-      <h1>{{userName}}</h1>
+    <div class="user" style="font-weight:390" >
+      <h1 style="font-weight: 100"><a href="#/admin/welcome">{{userName}}</a></h1>
       <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
     </div>
     <div class="nav">
@@ -16,7 +18,6 @@
       </ul>
     </div>
   </div>
-
 
 </div>
 </template>
@@ -51,18 +52,27 @@
 </script>
 
 <style lang="less">
+
   .container{
+
+    background: #F7F7F7;
     width: 100%;
     height: 100%;
     margin:0;
     padding: 0;
     .side-bar {
-      h1{
+      .user{
+        padding-left: 30px;
+        h1{
         font-style: normal;
+        display: inline-block;
+        margin-right: 50px;
       };
+      }
+
       height: 1000px;
-      width: 17%;
-      background: #5BC0DE;
+      width: 20%;
+      background: rgba(36, 190, 214, 0.54);
       color: white;
       ul{
         padding: 0;
@@ -81,29 +91,23 @@
         text-align: center;
         list-style: none;
         padding-left: 0px;
-        background: #337AB7;
+        background: #26c3dd;
         height: 50px;
         width: 100%;
       }
 
       li:hover{
-        background-color: #0e24b7;
+        background-color: rgba(23, 161, 224, 0.91);
       }
       .selected{
-        background-color: #0e24b7;
+        background-color: rgba(23, 161, 224, 0.91);
       }
     }
   }
 
   .content{
     float: right;
-    width: 81%;
+    width: 79%;
     //margin-left: 50px;
-  }
-
-  .user h1{
-    display: inline-block;
-    margin-right: 50px;
-
   }
 </style>

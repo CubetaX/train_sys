@@ -2,7 +2,7 @@
     <div>
       <h2>
         <span class="label label-primary">已有培训计划</span>
-        <span class="label label-info">共有{{courses.length}}条信息</span>
+        <span class="label label-info" style="font-size: medium;">共{{courses.length}}条</span>
         <span class="search"><input @keyup.enter="searchCourse(searchKey)" type="text"  class="form-control search" placeholder="搜索关键字" v-model="searchKey"> </span>
       </h2>
       <table class="table table-striped">
@@ -267,13 +267,16 @@
 </script>
 
 <style scoped>
+  .label{
+    font-weight: normal;
+  }
   .selected{
     background: #CCFFFF !important;
   }
   .search{
     display: inline-block;
     float: right;
-    width: 30%;
+    width: 40%;
   }
   .pageControl{
     float: right;
