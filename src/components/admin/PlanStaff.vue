@@ -81,7 +81,6 @@
       </template>
       <template slot="body">
         员工ID：<input type="text" class="form-control" placeholder="ID" v-model="tempPlan.person_id">
-        <!--课程ID：<input type="text" class="form-control" placeholder="课程ID" v-model="course.id">-->
         分数：<input type="text" class="form-control" placeholder="分数" v-model="tempPlan.score">
         考核时间：<input type="date" class="form-control"  v-model="tempPlan.exam_date">
         评价： <select  class="selectMenu" v-model="tempPlan.apprisement_code">
@@ -129,7 +128,7 @@
           console.log("test",val)
           axios({
             method: "get",
-            url: `/api/plan/${this.course.id}`,
+            url: `/api/plan/course/${this.course.id}`,
           }).then(result => {
             console.log(result.data);
             this.planStaff = result.data;

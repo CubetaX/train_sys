@@ -37,8 +37,10 @@
           已结束
         </td>
         <td>
-          <button  class="btn btn-info" @click="edit(item)">选修该课</button>
-          <button class="btn btn-warning " @click="delete_(item)">弃选该课</button>
+          <button class="btn btn-default" style="color: gray" v-if="item.course_state_code==2&&item.plan_id==null">课程已结束</button>
+          <button class="btn btn-default" style="color: gray" v-else-if="item.number==item.selectedNum">课程已满</button>
+          <button  class="btn btn-info" @click="select_(item);postCourseWithStaff(item)" v-else-if="item.plan_id==null">选修</button>
+          <button class="btn btn-warning " @click="delete_(item)" v-else>弃选</button>
         </td>
       </tr>
       </tbody>
@@ -52,24 +54,43 @@
       </div>
     </div>
     <hr>
-    <more-info :course="tempCourse" v-if="isLooking" ></more-info>
+    <div>
+      <h2><span class="label label-success" v-if="isLooking">更多信息</span></h2>
+      <div class="alert alert-info alert-dismissible"  v-if="isLooking" style="color:black;font-size: 20px;background: #f0f0f0">
+        <button type="button" class="close"  @click="isLooking=false"><span>&times;</span></button>
+        <p>
+          <strong>课程介绍 : </strong>{{tempCourse.intro}}
+        </p>
+        <p>
+          <strong>教材 : </strong> {{tempCourse.book}}
+        </p>
+      </div>
+    </div>
+
+    <notice-modal @delete="deleteCourseWithStaff" @closeModal="closeModal" v-show="showNoticeModal">
+      <template slot="header">确定弃选？(已有成绩将不再保留)</template>
+    </notice-modal>
+
   </div>
 </template>
 
 <script>
   import axios from 'axios'
-  import MoreInfo from './MoreInfo'
+  import NoticeModal from '../noticeModal'
+
   export default {
     name: "SelectCourse",
     components:{
-      MoreInfo
+      NoticeModal
     },
+    props:['id'],
     created(){
       this.getCourse();
     },
     data(){
       return{
         searchKey:'',
+        isSelected:false,
         isEditing:false,
         isLooking:false,
         pageContent:[],
@@ -92,6 +113,7 @@
         oldId:null,
         courseName:'',
         selectId:'',
+
 
 
       }
@@ -117,9 +139,11 @@
         }
       },
       getCourse() {
+        this.courses=[]
+        this.tempCourse={}
         axios({
           method: "get",
-          url: '/api/course'
+          url: `/api/courseWithStaff/${this.id}`
         }).then(result => {
           console.log(result.data);
           this.courses = result.data;
@@ -146,11 +170,19 @@
           }
         )
       },
-      postCourse(){
+      postCourseWithStaff(){
         axios({
           method:'post',
-          url:'api/course',
-          data:{course:this.tempCourse}
+          url:'api/plan',
+          data:{
+            plan: {
+              person_id: this.id,
+              course_id: this.tempCourse.id,
+              apprisement_code: 0,
+              score: null,
+              exam_date: null,
+            }
+          }
         }).then(response => {
           console.log(response.data)
           if ( response.data === -1)  {
@@ -163,11 +195,16 @@
           }
         })
       },
-      deleteCourse(course){
+      deleteCourseWithStaff(){
         axios({
           method: 'delete',
-          url: 'api/course',
-          data:{id:course.id}
+          url: 'api/plan',
+          data:{
+            plan:{
+              id:this.tempCourse.plan_id,
+              course_id:this.tempCourse.id
+            }
+          }
         }).then( result => {
             if(result.data === - 1){
               alert("删除失败")
@@ -182,7 +219,7 @@
         console.log("seaching")
         axios({
           method:'get',
-          url:`api/course/${key}`,
+          url:`api/courseWithStaff/${this.id}/${key}`,
         }).then(result =>{
           if (result.data.length ===0 ){
             alert("没有查到任何信息")
@@ -195,6 +232,9 @@
           }
         })
       },
+      select_(Course){
+        this.tempCourse = Course;
+      },
       delete_(Course){
         this.showNoticeModal = true;
         this.tempCourse = Course;
@@ -203,7 +243,10 @@
         this.tempCourse = Course;
         this.isLooking = true;
       },
-
+      closeModal(){
+        this.showFormModal = false;
+        this.showNoticeModal = false
+      },
     }
   }
 </script>
@@ -213,7 +256,7 @@
     font-weight: normal;
   }
   .selected{
-    background: #CCFFFF !important;
+    background: rgba(86, 255, 228, 0.15) !important;
   }
   .search{
     display: inline-block;
@@ -221,7 +264,7 @@
     width: 40%;
   }
   .pageControl{
-    float: right;
+    text-align: end;
   }
   thead{
     background:#CCFFFF;

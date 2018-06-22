@@ -72,7 +72,41 @@ const course = {
       console.error(e)
     }
   },
-
+  async getCourseWithStaff(ctx) {
+    let person_id = ctx.params.id
+    const sql1 = "SELECT id, name, teacher_id, intro, book, classroom, number, date_format(classtime,\"%Y-%m-%d\") as classtime, course_state_code, selectedNum FROM train.course;";
+    let course = await query(sql1);
+    const sql2 = `select * from training_plan where person_id = ${person_id}`
+    let plan = await query(sql2);
+    for (let i = 0; i < course.length; i++) {
+      for (let j = 0; j < plan.length; j++) {
+        if (course[i].id === plan[j].course_id) {
+          course[i]['plan_id'] = plan[j].id;
+          break;
+        }
+        else course[i]['plan_id'] = null;
+      }
+      ctx.response.body = course;
+    }
+  },
+  async searchCourseWithStaff(ctx){
+    let person_id = ctx.params.id;
+    let key =ctx.params.key;
+    const sql1 = `sELECT id, name, teacher_id, intro, book, classroom, number, date_format(classtime,\"%Y-%m-%d\") as classtime, course_state_code, selectedNum FROM train.course where name like ${key} or id ='${key}'`;
+    let course = await query(sql1);
+    const sql2 = `select * from training_plan where person_id = ${person_id}`
+    let plan = await query(sql2);
+    for (let i = 0; i < course.length; i++) {
+      for (let j = 0; j < plan.length; j++) {
+        if (course[i].id === plan[j].course_id) {
+          course[i]['isSelect'] = 1;
+          break;
+        }
+        else course[i]['isSelect'] = 0;
+      }
+      ctx.response.body = course;
+    }
+  }
 }
 
 

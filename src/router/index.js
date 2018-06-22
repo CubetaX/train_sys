@@ -39,12 +39,14 @@ export default new Router({
           props: true
         },
         {
-          path: '/staff/selectCourse',
+          path: '/staff/selectCourse/:id',
           component: SelectCourse,
+          props: true
         },
         {
-          path: '/staff/grade',
+          path: '/staff/grade/:id',
           component: Grade,
+          props: true
         }
       ]
     },

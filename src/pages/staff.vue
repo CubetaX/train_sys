@@ -4,14 +4,14 @@
       <router-view @update="update"> </router-view>
     </div>
     <div class="side-bar">
-      <div class="user">
-        <h1><a href="#/staff/welcome">{{userName}}</a></h1>
+      <div class="user" style="font-weight:300" >
+        <h1><a href="#/staff/welcome" style="font-weight: 100">{{userName}}</a></h1>
         <a href="#/login" style="display:block;"><span class="glyphicon glyphicon-log-out"></span>登出</a>
       </div>
       <div class="nav">
         <ul>
-          <router-link to="/staff/selectCourse" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>选课列表</li></router-link>
-          <router-link to="/staff/grade"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>成绩查询</li></router-link>
+          <router-link :to="`/staff/selectCourse/${userId}`" > <li :class="selected==1?'selected':''" @click="select(1)"><span class="glyphicon glyphicon-tag"></span>选课列表</li></router-link>
+          <router-link :to="`/staff/grade/${userId}`"><li :class="selected==2?'selected':''" @click="select(2)"><span class="glyphicon glyphicon-tag"></span>成绩查询</li></router-link>
           <router-link  :to="`/staff/userInfo/${userId}`"><li :class="selected==3?'selected':''" @click="select(3)"><span class="glyphicon glyphicon-cog"></span>修改个人资料</li></router-link>
         </ul>
       </div>
@@ -51,7 +51,6 @@
 </script>
 
 <style lang="less">
-
   .container{
 
     background: white;
@@ -107,7 +106,22 @@
   .content{
     float: right;
     width: 79%;
-
+    //margin-left: 50px;
   }
+
+  /*.fade-enter-active,.fade-leave-active{*/
+  /*transition:  all 1s ease-out;*/
+  /*opacity: 1;*/
+  /*}*/
+  /*!* 进入开始 *!*/
+  /*.fade-enter{*/
+  /*transform: translateY(0px);*/
+  /*opacity: 0;*/
+  /*}*/
+  /*!* 出去终点 *!*/
+  /*.fade-leave-active{*/
+  /*transform: translateY(-500px);*/
+  /*opacity: 0;*/
+  /*}*/
 
 </style>

@@ -51,69 +51,23 @@
 </script>
 
 <style scoped>
-  .modal-backdrop {
-    position: fixed;
-    background-color: rgba(0,0,0,.1);
+  .modal-backdrop
+  { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background-color: rgba(0,0,0,.3); display: flex; justify-content: center; align-items: center; }
+  .modal {
+    top: 20%;
+    left: 20%;
+    height: 60%;
+    width: 60%;
+    background-color: #fff; box-shadow: 2px 2px 20px 1px;
+
     display: flex;
-    justify-content: center;
-    align-items: center; }
-.modal {
-  position: absolute;
-  margin: 5%;
-  background-color: #fff;
-  box-shadow: 2px 2px 20px 1px;
-  overflow: paged-y;display: flex;
-  flex-direction: column; }
-.modal-header, .modal-footer
-{display: flex; }
-.modal-header {
-  border-bottom: 1px solid #eee;
-  color: #4aae9b;
-  justify-content: space-between; }
-.modal-footer {
-  position:relative;
-  bottom: 10px;
-  justify-content: flex-end;
-  padding-top: 5px;
-  overflow: hidden }
-.modal-body {
- height: 300px;
-  position: relative;
-  overflow:auto;}
-  .btn{
-    color: #4aae9b;
-    background: #eee;
-  }
-  .modal-body span{
-    display: inline-block;
-    width: 45%;
-  }
-  .select-group{
-    margin-top: 10px;
-    display: flex;
-  }
-  .select-group span{
-    float: left;
-    width: 30%;
-  }
-  .close{
-    position: absolute;
-    right: 5px;
-    top: 10px;
-    font-size: 20px;
-    color: rgb(0,0,0);
-    border-radius: 40%;
-    background: red;
-    z-index: 5;
-  }
-  .modal-header span{
-    float: left;
-    background: red;
-  }
-  .btn-default{
-    background: white;
-  }
-  .selectMenu{
-    border: none;
-  }
+    flex-direction: column; }
+  .modal-header ,.modal-footer
+  { padding: 15px; }
+  .modal-header
+  { border-bottom: 1px solid #eee; color: #4aae9b; justify-content: space-between; }
+  .modal-footer
+  { border-top: 1px solid #eee; justify-content: flex-end; }
+  .modal-body
+  {position: relative; padding: 20px 10px; overflow-x:auto;}
 </style>

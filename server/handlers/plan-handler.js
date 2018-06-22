@@ -54,19 +54,26 @@ const plan = {
     }
   },
   async deletePlan(ctx) {
-    console.log(ctx.request.body);
     console.log("deleteplan");
-    let plan = ctx.request.body;
+    let plan = ctx.request.body.plan;
+    console.log(plan.id);
+    console.log(plan.course_id);
     const sql = `delete from training_plan where id=${plan.id}`;
     const sql2 =`update course set selectedNum=selectedNum-1 where id=${plan.course_id}`
-    let result = await  query(sql);
-    let result2 = await  query(sql2);
-    ctx.response.body = result
+    try {
+      let result = await  query(sql);
+      let result2 = await  query(sql2);
+      ctx.response.body = result
+    }catch(e){
+      console.error(e)
+    }
+
+
   },
   async postPlan(ctx) {
     let plan = ctx.request.body.plan;
-    console.log(ctx.request.body.plan);
-    plan.id = function RndNum(n){
+    console.log();
+    plan['id'] = function RndNum(n){
       let rnd="";
       for(let i=0;i<n;i++)
         rnd+=Math.floor(Math.random()*10);
@@ -106,11 +113,12 @@ const plan = {
     }
 
   },
-  async searchPlanStaff(ctx){
+  async searchCourseByStaff(ctx){
     console.log("seaching loading")
+    let id = ctx.params.id;
     let key = ctx.params.key;
     console.log(key);
-    const sql = `SELECT person.* FROM train.person left outer join train.department on person.department_id=train.department.id where department.name like "${key}%" or person.id="${key}" or person.name like "${key}%" or person.sex="${key}" or person.job="${key}" or person.tel ="${key}" `;
+    const sql = `select * from planstaff where person_id='${id}' and (course_name like '${key}%' or course_id = '${key}' or apprisement_name like '${key}%')`; //需要'' 否则会报错
     console.log(sql);
     try {
       let result = await  query(sql);

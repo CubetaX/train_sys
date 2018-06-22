@@ -42,7 +42,7 @@
 
     <td>{{item.job}}</td>
     <td>{{item.tel}}</td>
-    <td v-if="item.authority===1">管理员</td>
+    <td v-if="item.authority===1">管理员<span class="glyphicon glyphicon-user"></span></td>
     <td v-else>普通员工</td>
     <td>
       <button class="btn btn-default" @click="edit(item)">修改</button>
